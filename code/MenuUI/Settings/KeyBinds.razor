@@ -1,0 +1,80 @@
+﻿@using Sandbox.UI;
+@using Sandbox;
+@using Menu.Settings;
+@namespace Menu.Settings
+@inherits Panel
+@page "/settings/keybinds"
+
+<style>
+    KeyBind
+    {
+        align-items: center;
+    }
+</style>
+
+<root class="page-inner with-gaps glass-column with-shrink">
+
+    <column class="with-gaps with-scrolling with-shrink">
+
+        @{
+
+            var inputs = MenuUtility.Input.GetCommonInputs();
+            var groups = inputs.GroupBy(x => x.GroupName);
+        }
+
+        @foreach ( var group in groups)
+        {
+            <div class="glass with-padding is-heading">
+                <cell class="text-heading">@group.Key</cell>
+            </div>
+
+            @foreach ( InputAction button in group )
+            {
+                <row class="with-gaps">
+
+                    <cell class="glass with-padding is-label">
+                        @button.Name
+                    </cell>
+
+                    <KeyBindCommon BindGroup="common" Action=@button class="glass with-padding with-grow with-click"></KeyBindCommon>
+
+                </row>
+            }
+        }
+
+	</column>
+
+    <SettingsFooter></SettingsFooter>
+
+</root>
+
+
+@code
+{
+    [PanelEvent("cancel-changes")]
+    public void CancelChanges()
+    {
+        foreach (var kb in Descendants.OfType<KeyBindCommon>())
+        {
+            kb.Cancel();
+        }
+    }
+
+    [PanelEvent("restore-defaults")]
+    public void RestoreDefaults()
+    {
+        MenuUtility.Input.ResetBinds( "common" );
+        MenuUtility.Input.SaveBinds( "common" );
+    }
+
+    [PanelEvent("apply-settings")]
+    public void ApplySettings()
+    {
+        foreach (var kb in Descendants.OfType<KeyBindCommon>())
+        {
+            kb.Apply();
+        }
+
+        MenuUtility.Input.SaveBinds( "common" );
+    }
+}

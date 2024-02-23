@@ -1,0 +1,247 @@
+﻿@using Sandbox.UI;
+@using Sandbox;
+@using System;
+@namespace Menu.Settings
+@inherits Panel
+@page "/settings/storage"
+
+<style>
+
+    .file-surround
+    {
+        flex-grow: 1;
+        gap: 2px;
+    }
+
+    .file-category
+    {
+        flex-direction: column;
+        padding: 40px 20px;
+        background-color: rgba( white, 0.02 );
+        box-shadow: 2px 2px 9px black;
+    }
+
+    .file-category:last-child
+    {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .file-category:first-child
+    {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .file-category .title
+    {
+        font-size: 16px;
+        font-weight: bold;
+
+    }
+
+    .file-type-model
+    {
+        background-color: #283A5B;
+        color: #518DDB;
+    }
+
+    .file-type-sound
+    {
+        background-color: #2E6334;
+        color: #29AD4A;
+    }
+
+    .file-type-map
+    {
+        background-color: #543357;
+        color: #AA59A1;
+    }
+
+    .file-type-texture
+    {
+        background-color: #5F592D;
+        color: #C0C654;
+    }
+
+</style>
+
+<root class="page-inner">
+
+    <column class="with-gaps with-grow">
+
+        <div class="glass with-padding is-heading">
+            <cell class="text-heading">Storage Usage</cell>
+        </div>
+
+        <cell class="glass" style="padding: 50px;">
+
+            <div class="file-surround">
+
+                @foreach (var entry in SizeBreakdown )
+                {
+                    <div class="file-category file-type-@entry.Key" style="flex-grow: @entry.Value;">
+                        <div class="title">@entry.Key</div>
+                        <div class="size">@entry.Value.FormatBytes()</div>
+
+                    </div>
+                }
+
+            </div>
+
+        </cell>
+
+        <column class="glass" style="padding: 50px;">
+
+            <div class="file-surround">
+
+                <div class="file-category file-type-recent" style="flex-grow: @(1 + (Size - OldSize));">
+                </div>
+
+                @if (OldSize > 1024)
+                {
+                    <div class="file-category file-type-older" style="flex-grow: @OldSize;">
+                    </div>
+                }
+
+            </div>
+
+            <row>
+                <cell class="with-grow" style="padding: 10px; gap: 2px;">
+                    <span>@Size.FormatBytes()</span>
+                    <span>total storage used</span>
+                </cell>
+
+                @if (OldSize > 1024)
+                {
+                    <cell style="padding: 10px;gap: 2px;">
+                        <span>@OldSize.FormatBytes()</span>
+                        <span>ready to delete</span>
+                    </cell>
+                }
+
+            </row>
+
+        </column>
+
+        <div class="with-grow"></div>
+
+        <row class="with-gaps">
+
+            <div class="with-grow"></div>
+
+            @if (refreshTask == null || refreshTask.IsCompleted)
+            {
+                <cell class="glass with-padding with-click" @onclick=@TryRefresh>
+                    <cell><i>restore</i></cell>
+                    <cell>Refresh</cell>
+                </cell>
+            }
+
+            @if (clearTask?.IsCompleted ?? true)
+            {
+                <cell class="glass with-padding with-click" @onclick=@ClearUnused>
+                    <cell><i>delete</i></cell>
+                    <cell class="text-title">Delete Unused Assets</cell>
+                </cell>
+            }
+        </row>
+
+	</column>
+
+</root>
+
+
+@code
+{
+    /// <summary>
+    /// The default dead period. If a file hasn't been used in this many days assume it's dead
+    /// </summary>
+    const int DaysAgo = 7;
+
+    Task refreshTask;
+    Task clearTask;
+
+    Dictionary<string, long> SizeBreakdown = new Dictionary<string, long>();
+
+    long Files;
+    long Size;
+    long OldSize;
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (!firstTime)
+            return;
+
+        TryRefresh();
+    }
+
+    /// <summary>
+    /// Delete everything that hasn't been used for x days, and then refresh
+    /// </summary>
+    async Task ClearUnused()
+    {
+        clearTask = MenuUtility.Storage.FlushAsync(DateTime.Now.AddDays(-DaysAgo));
+        await clearTask;
+        clearTask = null;
+
+        TryRefresh();
+    }
+
+    /// <summary>
+    /// Refresh the file usage (if there isn't already a refresh in progress)
+    /// </summary>
+    void TryRefresh()
+    {
+        if (refreshTask != null && !refreshTask.IsCompleted ) return;
+
+        refreshTask = Refresh();
+    }
+
+    async Task Refresh()
+    {
+        SizeBreakdown.Clear();
+        Files = 0;
+        Size = 0;
+        OldSize = 0;
+
+        DateTime cutoff = DateTime.Now.AddDays(-DaysAgo);
+
+        StateHasChanged();
+
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+
+        foreach (var entry in MenuUtility.Storage.GetStorageFiles())
+        {
+            Files++;
+            Size += entry.Size;
+
+            if (entry.LastAccessed < cutoff)
+                OldSize += entry.Size;
+
+            var type = "Other";
+
+            if (entry.Filename.Contains(".vpk.")) type = "Map";
+            if (entry.Filename.Contains(".vtex_c.")) type = "Texture";
+            if (entry.Filename.Contains(".vmdl_c.")) type = "Model";
+            if (entry.Filename.Contains(".vsnd_c.")) type = "Sound";
+
+            if (!SizeBreakdown.ContainsKey(type))
+                SizeBreakdown[type] = 0;
+
+            SizeBreakdown[type] += entry.Size;
+
+
+            if (sw.ElapsedMilliseconds > 1 )
+            {
+                sw.Restart();
+                await Task.DelayRealtime( 1 );
+                StateHasChanged();
+            }
+        }
+
+        StateHasChanged();
+    }
+}

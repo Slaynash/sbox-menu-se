@@ -1,0 +1,279 @@
+
+PackageInformation
+{
+    flex-shrink: 0;
+
+    .header-row
+    {
+        gap: 32px;
+        margin-bottom: 32px;
+        flex-shrink: 0;
+    }
+
+    .package-logo
+    {
+        width: 256px;
+        height: 256px;
+        border-radius: 16px;
+        background-size: cover;
+    }
+
+    .package-detail-container
+    {
+        gap: 4px;
+        flex-shrink: 1;
+        flex-grow: 1;
+    }
+
+    .package-title
+    {
+        font-size: 24px;
+        font-weight: bold;
+        font-family: poppins;
+        align-items: center;
+        gap: 10px;
+
+        .package-type
+        {
+            font-size: 11px;
+            font-family: Monospace;
+            text-transform: uppercase;
+            opacity: 0.2;
+        }
+    }
+
+    .package-summary
+    {
+        font-size: 16px;
+        opacity: 0.4;
+    }
+
+    .org-title
+    {
+        margin-bottom: 10px;
+    }
+
+    .package-data
+    {
+        gap: 4px;
+    }
+
+    .with-background
+    {
+        background-color: rgba( #707579, 0.1 );
+    }
+
+    .package-description
+    {
+        padding: 10px 30px;
+        font-size: 16px;
+        opacity: 0.5;
+    }
+
+    .package-org
+    {
+        border-radius: 3px;
+        align-items: center;
+        margin-bottom: 5px;
+
+        .org-logo
+        {
+            width: 32px;
+            height: 32px;
+            border-radius: 5px;
+            margin: 5px;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .org-title
+        {
+            font-size: 15px;
+            font-family: "Poppins";
+            font-weight: 600;
+            text-shadow: 1px 1px 1px black;
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 5px;
+        }
+    }
+
+    .package-column
+    {
+        width: 350px;
+    }
+
+    section
+    {
+        flex-direction: column;
+        margin-bottom: 30px;
+
+        h2
+        {
+            font-size: 22px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+            font-weight: 600;
+            font-family: poppins;
+        }
+    }
+
+    .package-screenshots
+    {
+        overflow-x: scroll;
+        justify-content: flex-start;
+        mask-image: linear-gradient( to right, white 0%, white 80%, grey 90%, black 100% );
+        gap: 4px;
+
+        .screenshot
+        {
+            background-color: rgba( white, 0.1 );
+            background-position: center;
+            background-size: cover;
+            cursor: pointer;
+            height: 205px;
+            aspect-ratio: 1.7;
+            margin-bottom: 3px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            border-radius: 2px;
+            opacity: 0.85;
+
+
+            &:hover
+            {
+                opacity: 1;
+            }
+
+            &:active
+            {
+                transform: scale( 0.95 );
+            }
+        }
+    }
+
+    .grouped-buttons
+    {
+        > *
+        {
+            flex-grow: 1;
+            padding: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-right: 4px;
+            border-radius: 3px;
+            font-size: 18px;
+
+            i
+            {
+                margin-right: 10px;
+            }
+
+            &:last-child
+            {
+                margin-right: 0px;
+            }
+        }
+    }
+}
+
+LogoAndTitle
+{
+    flex-direction: column;
+
+    .package-logo
+    {
+        height: 230px;
+        min-height: 64px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        background-position: center;
+        background-size: cover;
+        background-color: $background;
+    }
+
+    .package-title
+    {
+        flex-shrink: 0;
+        font-size: 35px;
+        font-weight: 600;
+        text-shadow: 1px 1px 1px black;
+        white-space: nowrap;
+        overflow: hidden;
+        justify-content: flex-start;
+        margin-bottom: 0px;
+    }
+
+    .package-summary
+    {
+        max-height: 256px;
+        flex-shrink: 0;
+        font-size: 14px;
+        overflow: hidden;
+        justify-content: flex-start;
+        margin-bottom: 10px;
+        opacity: 0.5;
+    }
+
+    .package-data
+    {
+        color: #B0D7EF;
+        gap: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: rgba( $background, 0.5 );
+        font-size: 14px;
+
+        i
+        {
+            padding-right: 8px;
+            font-size: 16px;
+        }
+    }
+}
+
+SocialButtons
+{
+    .social-button
+    {
+        border: 0px;
+        padding: 0px 10px;
+        font-size: 18px;
+        align-items: center;
+        pointer-events: all;
+        cursor: pointer;
+        opacity: 0.3;
+        margin-bottom: 10px;
+
+        i
+        {
+            margin-right: 10px;
+        }
+
+        &:hover
+        {
+            opacity: 1;
+        }
+    }
+
+    .thumb-up.active, .thumb-down.active
+    {
+        i
+        {
+            color: $primary;
+        }
+
+        opacity: 1;
+        pointer-events: none;
+    }
+
+    .favourite.active
+    {
+        i
+        {
+            color: #cc57d5;
+        }
+
+        opacity: 1;
+    }
+}

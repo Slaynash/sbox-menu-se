@@ -1,0 +1,29 @@
+{
+  "Title": "Menu Addon",
+  "Type": "library",
+  "Org": "local",
+  "Ident": "menu",
+  "Tags": null,
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "Resources": null,
+  "MenuResources": null,
+  "HasCode": true,
+  "CodePath": "code",
+  "PackageReferences": [
+    "local.base"
+  ],
+  "EditorReferences": null,
+  "Metadata": {
+    "Compiler": {
+      "RootNamespace": "Menu",
+      "DefineConstants": "SANDBOX;MENUDLL",
+      "NoWarn": "1701;1702;1591;",
+      "AssemblyReferences": [
+        "Sandbox.Menu",
+        "Sandbox.Game"
+      ]
+    }
+  }
+}

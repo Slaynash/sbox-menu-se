@@ -1,0 +1,55 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@inherits Panel
+@attribute [StyleSheet]
+
+<root>
+    @if ( MenuSystem.ShowOverlay )
+    {
+        <div class="title">@title</div>
+        <div class="version"><span>@Application.VersionDate.ToShortDateString()</span><span style="opacity: 0.5;">@Application.Version</span></div>
+    }
+</root>
+
+@code{
+    string title;
+
+    string[] swords = new string[] {
+        "s&al", "s&bag", "s&bar", "s&box", "s&man",
+        "s&pit", "s&hog", "s&lot", "s&fly", "s&boy",
+        "s&dab", "s&ing", "s&mix", "s&eel", "s&out",
+        "s&spy", "s&pot", "s&une", "s&ink", "s&ram",
+        "s&key", "s&bat", "s&wich", "s&worm", "s&blast",
+        "s&stone", "s&bank", "s&belt", "s&bird", "s&cast",
+        "s&fish", "s&butt", "s&iron", "s&like", "s&ling",
+        "s&paper", "s&peep", "s&pile", "s&piper", "s&play",
+        "s&plum", "s&port", "s&rack", "s&rail", "s&rift",
+        "s&rook", "s&root", "s&shoe", "s&soap", "s&storm"
+    };
+
+    protected override void OnParametersSet()
+    {
+        //  title = GenerateSandWord();
+        title = System.Random.Shared.FromArray(swords);
+    }
+
+    public string GenerateSandWord()
+    {
+        // Characters to use for generating the word
+        char[] letters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+
+        // Start with 's&' and add three more random letters
+        string word = "s&";
+        for (int i = 0; i < 3; i++)
+        {
+            word += letters[System.Random.Shared.Next(letters.Length)];
+        }
+
+        return word;
+    }
+
+    protected override int BuildHash()
+    {
+        return System.HashCode.Combine( MenuSystem.ShowOverlay );
+    }
+}

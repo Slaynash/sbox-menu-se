@@ -1,0 +1,105 @@
+﻿@using Sandbox.UI;
+@using Sandbox;
+@namespace Menu.Settings
+@inherits Panel
+@page "/settings/audio"
+
+<root class="page-inner">
+
+    <column class="with-gaps">
+
+        <div class="glass with-padding is-heading">
+            <cell class="text-heading">Audio Devices</cell>
+        </div>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Audio Output
+            </cell>
+            <DropDown class="glass with-grow" Value:bind=@AudioDevice BuildOptions=@GetAudioDevices></DropDown>
+        </row>
+        
+        <div class="glass with-padding is-heading">
+            <cell class="text-heading">Global Volume</cell>
+        </div>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Global
+            </cell>
+            <SliderControl Value:bind=@GlobalVolume class="glass with-grow" Min="@(0)" Max="@(1)" Step="@(0.01f)"></SliderControl>
+        </row>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Voice
+            </cell>
+            <SliderControl Value:bind=@VoiceVolume class="glass with-grow" Min="@(0)" Max="@(1)" Step="@(0.01f)"></SliderControl>
+        </row>
+
+	</column>
+
+    <div class="with-grow"></div>
+
+    <SettingsFooter></SettingsFooter>
+
+</root>
+
+
+@code
+{
+    public float GlobalVolume{ get; set; }
+    public float VoiceVolume{ get; set; }
+
+    public string AudioDevice { get; set; }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (!firstTime)
+            return;
+
+        ReadSettings();
+    }
+
+    List<Option> GetAudioDevices()
+    {
+        var options = new List<Option>();
+        var devices = Sandbox.Internal.AudioSettings.GetAudioDevices();
+        foreach (var device in devices)
+        {
+            options.Add(new Option(device.Name, device.Id));
+        }
+
+        return options;
+    }
+
+    [PanelEvent("restore-defaults")]
+    public void RestoreDefaults()
+    {
+        var devices = Sandbox.Internal.AudioSettings.GetAudioDevices();
+        if(devices.Count() > 0)
+        {
+            Sandbox.Internal.AudioSettings.SetActiveDevice(devices.First().Id);
+        }
+        ConsoleSystem.SetValue("volume", 1.0f);
+        ConsoleSystem.SetValue("voip_volume", 1.0f);
+    }
+
+    [PanelEvent("cancel-changes")]
+    public void ReadSettings()
+    {
+        GlobalVolume = ConsoleSystem.GetValue("volume").ToFloat();
+        VoiceVolume = ConsoleSystem.GetValue("voip_volume").ToFloat();
+        AudioDevice = Sandbox.Internal.AudioSettings.GetActiveDevice().Id;
+    }
+
+    [PanelEvent("apply-settings")]
+    public void ApplySettings()
+    {
+        Sandbox.Internal.AudioSettings.SetActiveDevice( (string)AudioDevice );
+        ConsoleSystem.SetValue("volume", GlobalVolume);
+        ConsoleSystem.SetValue("voip_volume", VoiceVolume);
+    }
+}

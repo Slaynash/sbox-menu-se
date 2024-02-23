@@ -1,0 +1,21 @@
+{
+    "menu.home": "Home",
+    "menu.games": "Games",
+    "menu.localgames": "Dev Games",
+    "menu.avatar": "Avatar",
+    "menu.streaming": "Streaming",
+    "menu.servers": "Servers",
+    "menu.settings": "Settings",
+    "menu.tests": "Tests",
+    "menu.quit": "Quit",
+    "menu.lobby": "Lobby",
+
+    "menu.header.allgames" : "All Games",
+    "menu.header.currentgame" : "Current Game",
+    "menu.header.friendlist" : "Friends List",
+    "menu.header.friend.join" : "Join",
+
+    "menu.package.playercounts": "Player Counts",
+    "menu.package.tags": "Tags",
+    "menu.package.information": "Misc"
+}

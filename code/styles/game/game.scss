@@ -1,0 +1,122 @@
+
+@import "leaderboard";
+
+.sidebar .leaderboard-row
+{
+	font-family: Poppins;
+	background-color: rgba( #c6d4ee, 0.3 );
+	color: $background;
+	margin-bottom: 4px;
+	padding: 3px;
+	border-radius: 3px;
+	flex-shrink: 0;
+	align-items: center;
+	cursor: pointer;
+
+	&:hover
+	{
+		transform: scale( 1.02 );
+	}
+
+	&:active
+	{
+		transform: scale( 1.01 );
+	}
+
+	.icon
+	{
+		width: 20px;
+		white-space: nowrap;
+		content: 'star';
+		font-size: 17px;
+		align-items: center;
+		justify-content: center;
+		margin-left: 10px;
+		color: rgba( white, 0.4 );
+	}
+
+	.result
+	{
+		font-weight: bolder;
+		width: 40px;
+		margin-left: 10px;
+	}
+
+	.label
+	{
+		font-weight: bold;
+	}
+
+	&.is-1
+	{
+		background: linear-gradient(to right, #806224, #dea739, #e9ca3b);
+		color: #fff;
+		text-shadow: 1px 1px 2px black;
+
+		.icon
+		{
+			content: 'emoji_events';
+			color: #ff0;
+			text-shadow: 0px 0px 4px #ff0;
+		}
+	}
+
+	&.is-2
+	{
+		background: linear-gradient(to right, #859ea5, #d7d7d7, #859ea5, #d7d7d7);
+		color: #fff;
+
+		text-stroke-width: 2px;
+		text-stroke-color: rgba( black, 0.5 );
+
+		.icon
+		{
+			content: 'emoji_events';
+			color: #fff;
+			text-stroke-width: 3px;
+			text-stroke-color: rgba( black, 0.5 );
+		}
+	}
+
+	&.is-3
+	{
+		background: linear-gradient(to right, #766132, #c8a55f, #c6b97d);
+		color: #fff;
+		text-shadow: 0px 0px 2px #9f7928;
+
+		.icon
+		{
+			content: 'emoji_events';
+			color: #ff0;
+			text-shadow: 0px 0px px #ff0;
+		}
+	}
+
+	&.is-top10
+	{
+		background-color: rgba( #c6d4ee, 0.7 );
+
+		.icon
+		{
+			color: #ff0;
+			text-stroke-width: 4px;
+			text-stroke-color: rgba( black, 0.5 );
+		}
+	}
+
+	&.is-top100
+	{
+		background-color: rgba( #c6d4ee, 0.5 );
+	}
+}
+
+
+GameScreen.navigator-body
+{
+	pointer-events: none;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	top: 0px;
+}

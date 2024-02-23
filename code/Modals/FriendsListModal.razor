@@ -1,0 +1,54 @@
+﻿@using Sandbox.Modals
+@using Sandbox
+@using Menu.Social
+
+@namespace Menu.Modals
+@inherits Menu.Modals.BaseModal
+
+@attribute [StyleSheet]
+
+<root class="friendslist-modal">
+	<div class="inner-modal">
+		<div class="friends-list">
+			<div class="subtitle">Playing S&box</div>
+			
+			@* TODO: It'd be really great if we could group together our friends in parties here *@
+			@foreach ( var friend in Friends.Where( x => x.IsPlayingThisGame ) )
+			{
+			    <FriendEntry Friend=@friend></FriendEntry>
+			}
+
+			@if ( Options.ShowOnlineMembers )
+			{
+			    <div class="subtitle">Online</div>
+			    @foreach ( var friend in Friends.Where( x => x.IsOnline && !x.IsPlayingThisGame ) )
+			    {
+			        <FriendEntry Friend=@friend></FriendEntry>
+			    }
+			}
+
+			@if ( Options.ShowOfflineMembers )
+			{
+			    <div class="subtitle">Offline</div>
+			    @foreach ( var friend in Friends.Where( x => !x.IsOnline ) )
+			    {
+			        <FriendEntry Friend=@friend></FriendEntry>
+			    }
+			}
+		</div>
+	</div>
+</root>
+
+@code
+{
+	public IEnumerable<Friend> Friends => MenuUtility.Friends.Where( x => !x.IsMe )
+		.OrderBy( x => x.Name )
+		.OrderBy( x => x.IsAway || x.IsBusy || x.IsSnoozing );
+
+    FriendsListModalOptions Options;
+	
+    public FriendsListModal( FriendsListModalOptions options )
+    {
+        Options = options;
+    }
+}

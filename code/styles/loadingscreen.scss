@@ -1,0 +1,149 @@
+﻿
+loadingscreen {
+    background-color: #fff;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    flex-direction: column;
+    transition: all 0.2s ease-out;
+    transform-origin: 50% 50%;
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+
+    &.hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale( 1.1 );
+        transition: all 0.4s ease-out;
+    }
+}
+
+
+loadingscreen .footer {
+    flex-direction: row;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-top: 50px;
+    // alpha gradients fucking suck wtf
+    background: linear-gradient( to top, rgba( #111, 0 ), rgba( #111, 1 ) );
+
+    .spacer {
+        flex-grow: 1;
+        flex-shrink: 0;
+    }
+}
+
+
+
+loadingscreen .footer .action {
+    position: absolute;
+    right: 64px;
+    bottom: 64px;
+
+    button {
+        mix-blend-mode: lighten;
+        background-color: rgba( #fff, 0.05 );
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 24px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        font-family: Poppins;
+        justify-content: center;
+        align-items: center;
+        text-transform: uppercase;
+        opacity: 0.2;
+
+        .iconpanel {
+            font-size: 34px;
+            margin-right: 10px;
+            text-transform: none;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+loadingscreen .footer .status {
+    flex-direction: column;
+    text-align: center;
+    padding: 64px;
+    padding-top: 100px;
+    font-family: Poppins;
+    font-size: 30px;
+    color: #fff;
+    align-items: center;
+    flex-grow: 1;
+
+    .title {
+        font-weight: 600;
+    }
+
+    .subtitle {
+        font-size: 18px;
+        font-weight: 200;
+        opacity: 0.5;
+    }
+}
+
+div.row {
+    justify-content: flex-end;
+}
+
+stat {
+    margin: 5px;
+    border-radius: 3px;
+    font-size: 14px;
+    padding: 5px 15px;
+    justify-content: flex-end;
+    align-items: center;
+    mix-blend-mode: lighten;
+    opacity: 0.4;
+
+    &.remaining {
+        flex-grow: 1;
+    }
+
+    .unit {
+        opacity: 0.9;
+        padding-left: 5px;
+    }
+}
+
+icon, iconpanel {
+    font-family: "material icons";
+    flex-grow: 1;
+    text-align: left;
+}
+
+.download-progress {
+    mix-blend-mode: lighten;
+    width: 500px;
+    height: 40px;
+    margin-top: 50px;
+    border-radius: 5px;
+    background-color: rgba( white, 0.01 );
+    opacity: 0;
+    border: 2px solid rgba( #3273eb, 0.5 );
+
+    .download-inner {
+        border-radius: 4px;
+        background-color: rgba( #3273eb, 0.5 );
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+    }
+}
+
+.with-progress .download-progress {
+    opacity: 1;
+}

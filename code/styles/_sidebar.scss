@@ -1,0 +1,192 @@
+$padding-head: 100px !default;
+$padding-edge: 70px;
+
+$form-border: 3px solid #313c55;
+$form-border-active: 3px solid $primary;
+
+$corner-radius: 4px;
+$dimbg: #33343e;
+$dimfg: #88a;
+
+mainmenupanel
+{
+	.nothing-found
+	{
+		text-align: center;
+		color: white;
+		opacity: 0.2;
+		text-transform: lowercase;
+	}
+}
+
+.sidebar
+{
+	width: 450px;
+	flex-shrink: 0;
+	flex-grow: 0;
+	flex-direction: column;
+	z-index: 10;
+	padding: 40px 0px;
+
+	> .sidebar-inner
+	{
+		flex-direction: column;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	.section
+	{
+		flex-direction: column;
+		margin-bottom: 30px;
+
+		&:last-child
+		{
+			margin-bottom: 0;
+		}
+
+		.section-header
+		{
+			color: #c6d4ee;
+			font-family: poppins;
+			font-weight: 500;
+			text-transform: uppercase;
+			padding-bottom: 10px;
+			letter-spacing: 2px;
+		}
+
+		.section-text
+		{
+			color: #c6d4ee;
+			font-family: poppins;
+			font-weight: 400;
+			padding-bottom: 10px;
+			margin: 10px 20px;
+			font-size: 13px;
+		}
+	}
+
+	.checkbox
+	{
+		margin-bottom: 10px;
+		font-family: poppins;
+		font-weight: 400;
+		font-size: 13px;
+
+		&:last-child
+		{
+			margin-bottom: 0;
+		}
+	}
+
+	groupbox
+	{
+		border: $form-border;
+		border-radius: $corner-radius;
+		padding: 10px 15px;
+		flex-direction: column;
+	}
+
+	buttongroup, .buttongroup
+	{
+		display: flex;
+		overflow: hidden;
+		padding: 0;
+
+		> .button
+		{
+			margin: 0;
+			flex-grow: 1;
+			padding: 0;
+			font-size: 14px;
+			border: 0;
+			border-radius: 0;
+			text-align: center;
+			justify-content: center;
+			background-color: $dimbg;
+			color: $dimfg;
+			margin-right: 1px;
+
+			&.small
+			{
+				min-height: 36px;
+
+				i
+				{
+					font-size: 23px;
+				}
+			}
+
+			&:hover
+			{
+				border: 0;
+				position: relative;
+				background-color: $dimbg;
+				color: white;
+			}
+
+			&:active
+			{
+				border: 0;
+				position: relative;
+				background-color: $dimbg;
+				color: white;
+				transform: scale( 0.92 );
+			}
+
+			&.active
+			{
+				border: 0;
+				background-color: $primary;
+				position: relative;
+			}
+
+			&:first-child
+			{
+				border-radius: $corner-radius 0 0 $corner-radius;
+			}
+
+			&:last-child
+			{
+				border-radius: 0 $corner-radius $corner-radius 0;
+				margin-right: 0;
+			}
+		}
+	}
+
+	hr
+	{
+		height: 2px;
+		border-radius: 100px;
+		background-color: #313c55;
+		margin: 20px 0px;
+	}
+}
+
+.sidebar.is-secondary
+{
+	width: 400px;
+	overflow: hidden;
+
+	box-shadow: none;
+	z-index: 9;
+	transition: all 0.1s ease-out;
+
+	> .sidebar-inner
+	{
+		width: 400px;
+	}
+
+	&.hidden
+	{
+		width: 0px;
+		opacity: 0;
+	}
+}
+
+.sidebar .listbox
+{
+	font-size: 15px;
+	color: white;
+	font-family: Poppins;
+}

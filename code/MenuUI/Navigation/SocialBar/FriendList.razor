@@ -1,0 +1,65 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@namespace Menu.Social
+
+<root>
+	<div class="title">Friends</div>
+
+	<div class="friends">
+		<div class="subtitle">Playing S&box</div>
+		@* TODO: It'd be really great if we could group together our friends in parties here *@
+		@foreach (var friend in Friends.Where(x => x.IsPlayingThisGame))
+		{
+			<FriendEntry Friend=@friend></FriendEntry>
+		}
+		<div class="subtitle">Online</div>
+		@foreach (var friend in Friends.Where(x => x.IsOnline && !x.IsPlayingThisGame))
+		{
+			<FriendEntry Friend=@friend></FriendEntry>
+		}
+		<div class="subtitle">Offline</div>
+		@foreach (var friend in Friends.Where(x => !x.IsOnline))
+		{
+			<FriendEntry Friend=@friend></FriendEntry>
+		}
+	</div>
+</root>
+
+@code
+{
+	// Snoozing bastards to the bottom
+	public IEnumerable<Friend> Friends => MenuUtility.Friends.Where(x => !x.IsMe).OrderBy(x => x.Name).OrderBy(x => x.IsAway || x.IsBusy || x.IsSnoozing);
+
+	public static FriendList Instance;
+
+	public FriendList()
+	{
+		Instance = this;
+		//Event.Register(this);
+	}
+
+	[Event("ui.closepopups")]
+	public void ClosePopups( object obj )
+	{
+		if (obj is not Panel panel) return;
+		var adult = panel.AncestorsAndSelf.OfType<FriendList>().FirstOrDefault();
+		if (adult == this) return;
+		if (panel.AncestorsAndSelf.Where(x => x.HasClass("friends-button")).Any()) return;
+
+		SetClass("visible", false);
+	}
+
+	public static void Toggle()
+	{
+		Instance.SetClass("visible", !Instance.HasClass("visible"));
+		if (Instance.HasClass("visible")) Instance.Focus();
+	}
+
+	protected override int BuildHash()
+	{
+		// TODO: Probably need some more shit here
+        return HashCode.Combine(MenuUtility.Friends.Where(x => x.IsPlayingThisGame).Count(), MenuUtility.Friends.Where(x => x.IsOnline).Count());
+	}
+}

@@ -1,0 +1,60 @@
+
+LoadingOverlay
+{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: #222;
+    z-index: 1000;
+    color: white;
+    pointer-events: all;
+    opacity: 0.0;
+    transition: all 0.3s 0.1s ease-in;
+    transform: scale( 1.1 );
+
+    .loading-panel
+    {
+        font-size: 40px;
+        font-weight: 200;
+        font-family: Poppins;
+        position: absolute;
+        right: 200px;
+        bottom: 100px;
+        gap: 50px;
+        align-items: center;
+
+        .status
+        {
+            color: #fff4;
+        }
+
+        .cancel-button
+        {
+            background-color: #fff2;
+            color: #111;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 30px;
+            font-weight: normal;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin: 20px 0px;
+
+            &:hover
+            {
+                background-color: #fff6;
+            }
+        }
+    }
+
+    &.visible
+    {
+        opacity: 1;
+        transition: all 0s linear;
+        background-color: #111;
+        transform: scale( 1 );
+    }
+}

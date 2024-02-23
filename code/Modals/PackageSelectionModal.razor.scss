@@ -1,0 +1,20 @@
+.modal.package-selection-modal
+{
+    margin: 0px 100px;
+
+    packageselector
+    {
+        z-index: 1000;
+        pointer-events: none;
+        pointer-events: all;
+        background-color: #1113;
+
+        packagelist
+        {
+            padding: 32px;
+            padding-top: 100px;
+
+
+        }
+    }
+}

@@ -1,0 +1,64 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@page "/games/all"
+@inherits Panel
+
+<style>
+    .package-list 
+    {
+        padding: 50px 0px;
+    }
+</style>
+
+<root class="page-container page">
+    @if ( !Global.IsApiConnected )
+    {
+        <div style="flex-grow: 1; justify-content: center; align-items: center; flex-direction: column; gap: 16px;">
+            <div class="glass is-heading with-padding">You're running in offline mode and can't see any games. Restart your game and try again.</div>
+            <div class="glass is-heading with-padding">In the future we'll refresh this for you.</div>
+        </div>
+        return;
+    }
+
+    <PackageList OnMenu=@(OpenMenu) ShowFilters="@true" Query="type:game sort:trending" OnSelected="@OnPackageSelected" Take=@(100)></PackageList>
+</root>
+
+@code{
+
+    void OnPackageSelected(Package package)
+    {
+        MenuUtility.OpenGame( package.FullIdent );
+    }
+
+    void OpenMenu(Package package)
+    {
+        //Log.Info(string.Join($"/", package.Tags));
+
+        var menu = MenuPanel.Open(this);
+
+        menu.AddOption("play_arrow", "Launch Game", () => MenuUtility.OpenGame(package.FullIdent));
+
+        if (package.Tags.Contains("maplaunch"))
+        {
+            menu.AddOption("folder", "Open With Map..", () =>
+            {
+                Game.Overlay.ShowPackageSelector($"type:map sort:trending target:{package.FullIdent}", (p) => MenuUtility.OpenGameWithMap(package.FullIdent, p.FullIdent));
+            });
+        }
+
+        if (package.Tags.Contains("multiplayer"))
+        {
+            menu.AddSpacer();
+            menu.AddOption("list", "View servers", () =>
+            {
+                Game.Overlay.ShowServerList(new Sandbox.Modals.ServerListConfig(package.FullIdent));
+            });
+        }
+
+        menu.AddSpacer();
+        menu.AddOption("info", $"View Game Details", () => Game.Overlay.ShowPackageModal(package.FullIdent));
+        menu.AddOption("corporate_fare", $"View Creator", () => Game.Overlay.ShowOrganizationModal(package.Org));
+
+        // Add Vote buttons?
+    }
+}

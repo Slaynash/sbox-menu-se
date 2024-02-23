@@ -1,0 +1,14 @@
+{
+    "serverswidget.title": "Server List",
+    "serverswidget.refresh": "Refresh Server List",
+
+    "gameswidget.title": "Popular Games",
+
+    "newswidget.title": "Latest News",
+    "eventwidget.title": "Events",
+    "playerwidget.title": "Avatar",
+    "lobbieswidget.title": "Lobbies",
+    "lobbieswidget.description": "Lobbies are games that are waiting for players. Anyone can create a lobby.",
+    "trendingwidget.title": "New & Trending",
+    "playercountwidget.title": "{PlayerCount} players online"
+}

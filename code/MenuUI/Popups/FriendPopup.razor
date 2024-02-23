@@ -1,0 +1,111 @@
+@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Popup
+@namespace Menu
+
+<root class="glass-column with-gaps">
+    @if ( !Friend.IsFriend && !IsMe )
+    {
+        <row class="glass with-padding with-click" @onclick=@TryAddFriend>
+            <cell><i>person_add</i></cell>
+            <column>
+                <cell class="text-title">Send Friend Request</cell>
+            </column>
+        </row>
+    }
+
+    <row class="glass with-padding with-click" @onclick=@ShowProfile>
+        <cell><i>contact_page</i></cell>
+        <column>
+            <cell class="text-title">View Profile</cell>
+        </column>
+    </row>
+
+    @if ( IsMe ) return;
+
+    @if ( Joinable )
+    {
+        @if ( IsInGame && CanJoinGame )
+        {
+            <row class="glass with-padding with-click" @onclick=@Join>
+                <cell><i>sports_esports</i></cell>
+                <column>
+                    <cell class="text-title">Join Game</cell>
+                </column>
+            </row>
+        }
+    }
+
+    @if ( CanInviteToGame )
+    {
+        <row class="glass with-padding with-click" @onclick=@InviteToGame>
+            <cell><i>group_add</i></cell>
+            <column>
+                <cell class="text-title">Invite to Game</cell>
+            </column>
+        </row>
+    }
+
+</root>
+
+@code
+{
+    public Friend Friend { get; set; }
+
+    Friend Me => new Friend( Game.SteamId );
+    bool IsMe => Friend.IsMe;
+
+    // Accessors
+    bool Joinable => IsInGame;
+
+    string ConnectString => Friend.GetRichPresence( "connect" );
+
+    bool IsInGame => !string.IsNullOrEmpty(ConnectString);
+    bool InSameGame => IsInGame && ConnectString == Me.GetRichPresence("connect");
+
+    public bool CanJoinGame => !string.IsNullOrEmpty(ConnectString);
+
+    public bool CanInviteToGame
+    {
+        get
+        {
+            //if ( string.IsNullOrEmpty( Game.Server.SteamId ) ) return false;
+           // if ( GameSteamId == Game.Server.SteamId ) return false;
+            // TODO - Server capacity?
+            return false;
+        }
+    }
+
+    void ShowProfile()
+    {
+        Friend.OpenInOverlay();
+        Delete();
+    }
+
+    public static void Show( Panel sourcePanel, Friend friend, PositionMode mode = PositionMode.BelowStretch )
+    {
+        var popup = new global::Menu.FriendPopup();
+        popup.Friend = friend;
+        popup.SetPositioning( sourcePanel, mode, 8.0f );
+    }
+
+    public void Join()
+    {
+        MenuUtility.JoinFriendGame(Friend);
+        Delete();
+    }
+
+    public void InviteToGame()
+    {
+        // TODO - Implement
+        Delete();
+    }
+
+    public void TryAddFriend()
+    {
+        Friend.OpenAddFriendOverlay();
+        Delete();
+    }
+}

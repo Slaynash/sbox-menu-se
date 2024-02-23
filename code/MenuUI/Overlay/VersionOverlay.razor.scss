@@ -1,0 +1,42 @@
+
+VersionOverlay
+{
+    position: absolute;
+    top: 17px;
+    right: -218px;
+    background-color: #3472e6;
+    z-index: 10000;
+    color: #fff;
+    font-weight: normal;
+    pointer-events: none;
+    flex-direction: column;
+    gap: 0px;
+    font-size: 12px;
+    font-family: Poppins;
+    padding: 0px 100px;
+    border-radius: 0 0 0 4px;
+    box-shadow: 2px 2px 40px #0005;
+    white-space: nowrap;
+    transform: rotate( 45deg );
+
+    .title
+    {
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: -5px;
+    }
+
+    > div
+    {
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .version
+    {
+        color: #fffd;
+        padding: 0 100px;
+        padding-bottom: 7px;
+        font-weight: bold;
+    }
+}

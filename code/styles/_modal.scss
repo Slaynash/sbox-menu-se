@@ -1,0 +1,133 @@
+
+.modal
+{
+    position: absolute;
+    left: -1000px;
+    right: -1000px;
+    top: -1000px;
+    bottom: -1000px;
+    padding: 1000px;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-shrink: 0;
+    color: white;
+    transition: all 0.1s ease-out;
+    background-color: rgba( darken( $background, 0.25 ), 0.99 );
+    transform: scale( 1 );
+    backdrop-filter: blur( 3px ) contrast( 0.7 ) saturate( 0.3 );
+    opacity: 1;
+    pointer-events: all;
+
+
+    &:intro
+    {
+        transform: translatey( 100px ) scale( 1.1 );
+        backdrop-filter: blur( 0px ) contrast( 1 ) saturate( 1 );
+        opacity: 0;
+    }
+
+    &:outro
+    {
+        transform: translatey( -200px ) scale( 0.95 );
+        transition: all 0.2s ease-in;
+        backdrop-filter: blur( 0px ) contrast( 1 ) saturate( 1 );
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .inner-modal
+    {
+        flex-direction: column;
+        padding: 32px;
+        background-color: $background;
+        width: 100%;
+        border-radius: 32px;
+        box-shadow: 15px 25px 100px #0005;
+        flex-grow: 1;
+        z-index: 1000;
+    }
+
+    .modal-background
+    {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+    }
+
+    .modal-body
+    {
+        padding: 32px;
+        border-radius: 8px;
+        opacity: 1;
+        transition: all 0.2s ease-out;
+        width: 900px;
+        height: 70%;
+        background-color: $background;
+        box-shadow: 30px 30px 200px 50px rgba(black, 0.4 );
+        transform: translateY( 0px );
+        overflow-y: scroll;
+
+        &.large
+        {
+            width: 90%;
+            height: 80%;
+        }
+
+        &:intro
+        {
+            transform: translateY( 100px );
+        }
+
+        > .controls
+        {
+            margin-top: 30px;
+            width: 100%;
+
+            .button
+            {
+                border-radius: 8px;
+                margin-left: 20px;
+                font-size: 40px;
+            }
+        }
+
+        button, .button, .interactive
+        {
+            pointer-events: all;
+        }
+    }
+}
+
+
+.image-viewer
+{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 1010;
+    transition: all 0.2s ease-out;
+    opacity: 0;
+    transform: scale( 1 );
+    aspect-ratio: 1.1;
+    background-position: center;
+    background-size: contain;
+    background-color: #111;
+    background-repeat: no-repeat;
+    margin: 20px;
+    pointer-events: none;
+    transform: scale( 0.1 );
+    box-shadow: 0px 0px 100px 100px rgba( black, 0.4 );
+
+    &.active
+    {
+        opacity: 1;
+        pointer-events: all;
+        transform: scale( 1 );
+    }
+}

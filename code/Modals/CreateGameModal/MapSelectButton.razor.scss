@@ -1,0 +1,77 @@
+MapSelectButton
+{
+    border: 1px solid #0006;
+    background-color: #0002;
+    background-position: center;
+    background-size: cover;
+    //background-tint: #556;
+    border-radius: 10px;
+    width: 100%;
+    padding: 32px;
+    gap: 16px;
+
+    .card-image
+    {
+        width: 74px;
+        height: 74px;
+    }
+
+    .information
+    {
+        flex-direction: column;
+        gap: 4px;
+        backdrop-filter: blur( 10px );
+        background-color: #222a;
+        border-radius: 8px;
+        position: absolute;
+        left: 32px;
+        top: 32px;
+        padding: 16px;
+
+
+
+        .title
+        {
+            font-weight: bold;
+            font-size: 20px;
+            cursor: pointer;
+
+            &:hover
+            {
+                text-decoration: underline;
+            }
+        }
+
+        .credit
+        {
+            font-size: 16px;
+            gap: 5px;
+            opacity: 0.5;
+        }
+
+        .meta
+        {
+            font-size: 16px;
+            gap: 8px;
+            opacity: 0.3;
+
+            > div
+            {
+                gap: 4px;
+                align-items: center;
+            }
+        }
+    }
+
+    .button
+    {
+        flex-shrink: 0;
+        border-radius: 5px;
+        background-color: #222;
+        color: #ccc;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        font-weight: bold;
+    }
+}

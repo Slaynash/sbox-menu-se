@@ -1,0 +1,72 @@
+﻿
+@using Sandbox;
+@using Sandbox.UI;
+@inherits Panel
+@namespace Menu.Settings
+
+<root>
+
+    <row class="with-gaps with-grow">
+
+        <cell class="glass with-padding with-click" onclick=@RestoreDefaults>
+            <cell><i>restore</i></cell>
+            <cell>Restore Defaults</cell>
+        </cell>
+
+        <div class="with-grow"></div>
+
+        <cell class="glass with-padding with-click" onclick=@CancelChanges>
+            <cell><i>restore</i></cell>
+            <cell>Cancel</cell>
+        </cell>
+
+        <cell class="glass with-padding with-click @(Dirty ? "with-highlight" : "")" onclick=@ApplySettings>
+            <cell><i>exit_to_app</i></cell>
+            <cell class="text-title">Save Changes</cell>
+        </cell>
+
+    </row>
+
+</root>
+
+@code {
+    bool Dirty;
+    TimeUntil TimeUntilEnabled = 0.1f;
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (!firstTime)
+            return;
+
+        Parent?.AddEventListener("onchange", () => Dirty = TimeUntilEnabled <= 0);
+    }
+
+    protected override int BuildHash()
+    {
+        return Dirty.GetHashCode();
+    }
+
+    void ApplySettings()
+    {
+        CreateEvent("apply-settings");
+
+        Dirty = false;
+        TimeUntilEnabled = 0.1f;
+    }
+
+    void CancelChanges()
+    {
+        CreateEvent("cancel-changes");
+
+        Dirty = false;
+        TimeUntilEnabled = 0.1f;
+    }
+
+    void RestoreDefaults()
+    {
+        CancelChanges();
+        CreateEvent("restore-defaults");
+    }
+}

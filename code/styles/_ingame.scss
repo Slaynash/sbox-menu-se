@@ -1,0 +1,12 @@
+
+mainmenupanel .navigator-body:not( gamescreen )
+{
+	background-color: rgba( $background, 1 );
+	backdrop-filter: blur( 0px );
+}
+
+mainmenupanel.ingame .navigator-body:not( gamescreen )
+{
+	background-color: rgba( $background, 0.94 );
+	backdrop-filter: blur( 10px );
+}

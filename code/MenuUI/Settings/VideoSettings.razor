@@ -1,0 +1,197 @@
+﻿@using Sandbox.UI;
+@using Sandbox;
+@namespace Menu.Settings
+@inherits Panel
+@page "/settings/video"
+
+<root class="page-inner">
+
+    <column class="with-gaps">
+
+        <div class="glass with-padding is-heading">
+            <cell class="text-heading">Video Mode</cell>
+        </div>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Video Mode
+            </cell>
+            <ButtonGroup class="glass with-grow" ButtonClass="glass with-grow with-click @(Sandbox.Game.IsEditor ? "disabled" : "")" Value:bind=@VideoMode Options=@VideoModeOptions></ButtonGroup>
+        </row>
+        
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Resolution
+            </cell>
+            <DropDown class="glass with-grow @(Sandbox.Game.IsEditor ? "disabled" : "")" Value:bind=@Resolution BuildOptions=@GetResolutionOptions></DropDown>
+        </row>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                VSync
+            </cell>
+            <ButtonGroup class="glass with-grow" ButtonClass="glass with-grow with-click" Options=@VSyncOptions Value:bind=@VSync></ButtonGroup>
+        </row>
+
+        <div class="glass with-padding is-heading">
+            <cell class="text-heading">Render Quality</cell>
+        </div>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Anti-Aliasing
+            </cell>
+            <ButtonGroup class="glass with-grow" ButtonClass="glass with-grow with-click" Options=@AntiAliasingOptions Value:bind=@AntiAliasing></ButtonGroup>
+        </row>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Texture Filtering
+            </cell>
+            <ButtonGroup class="glass with-grow" ButtonClass="glass with-grow with-click" Options=@TextureFilteringOptions Value:bind=@TextureFiltering></ButtonGroup>
+        </row>
+
+	</column>
+
+     <div class="with-grow"></div>
+
+     <SettingsFooter></SettingsFooter>
+
+</root>
+
+
+@code
+{
+    public string VideoMode { get; set; }
+    public string Resolution { get; set; }
+    public string AntiAliasing { get; set; }
+    public string TextureFiltering { get; set; }
+    public bool VSync { get; set; }
+
+    List<Option> VideoModeOptions = new List<Option>()
+    {
+        new Option("Windowed", "web_asset", "window"),
+        new Option("Borderless", "fullscreen", "borderless"),
+        new Option("Exclusive", "monitor", "exclusive"),
+    };
+
+    List<Option> AntiAliasingOptions = new List<Option>()
+    {
+        new Option("None", "0"),
+        new Option("2x", "2"),
+        new Option("4x", "4"),
+        new Option("8x", "8"),
+    };
+
+    List<Option> TextureFilteringOptions = new List<Option>()
+    {
+        new Option("Bilinear", "0"),
+        new Option("Trilinear", "1"),
+        new Option("2x Anisotropic", "2"),
+        new Option("4x Anisotropic", "3"),
+        new Option("8x Anisotropic", "4"),
+        new Option("16x Anisotropic", "5"),
+    };
+
+    List<Option> VSyncOptions = new List<Option>()
+    {
+        new Option("Off", false),
+        new Option("On", true),
+    };
+
+
+    List<Option> GetResolutionOptions()
+    {
+        var options = new List<Option>();
+
+        var smallestAspect = 1.5f;
+
+        var displayModes = Sandbox.Internal.RenderSettings.DisplayModes( false )
+                                        .Where( x => x.Width >= 1280 ) // Fuck small screen sizes
+                                        .Where( x => ((float)x.Width / (float)x.Height) >= smallestAspect ); // fuck small aspect ratios
+
+        foreach ( var res in displayModes.GroupBy( x => $"{x.Width}x{x.Height}" ) )
+        {
+            options.Add(new Option(res.Key, res.Key));
+        }
+
+        return options;
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (!firstTime)
+            return;
+
+        ReadSettings();
+    }
+
+    public void ReadSettings()
+    {
+        VideoMode = "window";
+        if (Sandbox.Internal.RenderSettings.Borderless) VideoMode = "borderless";
+        if (Sandbox.Internal.RenderSettings.Fullscreen) VideoMode = "exclusive";
+        
+        Resolution = $"{Sandbox.Internal.RenderSettings.ResolutionWidth}x{Sandbox.Internal.RenderSettings.ResolutionHeight}";
+        VSync = Sandbox.Internal.RenderSettings.VSync;
+        AntiAliasing = $"{Sandbox.Internal.RenderSettings.AntiAliasQuality}";
+        TextureFiltering = $"{Sandbox.Internal.RenderSettings.TextureFiltering}";
+    }
+
+    [PanelEvent("restore-defaults")]
+    public void RestoreDefaults()
+    {
+        Sandbox.Internal.RenderSettings.ResetVideoConfig();
+    }
+
+    [PanelEvent("cancel-changes")]
+    public void CancelChanges()
+    {
+        ReadSettings();
+    }
+
+    [PanelEvent("apply-settings")]
+    public void ApplySettings()
+    {
+        if (!Game.IsEditor)
+        {
+            switch (VideoMode)
+            {
+                case "window":
+                    {
+                        Sandbox.Internal.RenderSettings.Fullscreen = false;
+                        Sandbox.Internal.RenderSettings.Borderless = false;
+                        break;
+                    }
+
+                case "borderless":
+                    {
+                        Sandbox.Internal.RenderSettings.Fullscreen = false;
+                        Sandbox.Internal.RenderSettings.Borderless = true;
+                        break;
+                    }
+
+                case "exclusive":
+                    {
+                        Sandbox.Internal.RenderSettings.Fullscreen = true;
+                        Sandbox.Internal.RenderSettings.Borderless = false;
+                        break;
+                    }
+            }
+
+            if (VideoMode != "borderless")
+            {
+                var parts = Resolution.Split("x", 2).Select(x => x.ToInt()).ToArray();
+                Sandbox.Internal.RenderSettings.ResolutionWidth = parts[0];
+                Sandbox.Internal.RenderSettings.ResolutionHeight = parts[1];
+            }
+        }
+
+        Sandbox.Internal.RenderSettings.VSync = VSync;
+        Sandbox.Internal.RenderSettings.AntiAliasQuality = AntiAliasing.ToInt();
+        Sandbox.Internal.RenderSettings.TextureFiltering = TextureFiltering.ToInt();
+        Sandbox.Internal.RenderSettings.Apply();
+    }
+}

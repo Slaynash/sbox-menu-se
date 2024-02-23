@@ -1,0 +1,51 @@
+﻿@using Sandbox.Modals
+@using Sandbox
+@using Sandbox.UI.GameMenu;
+@using Menu.Social
+
+@namespace Menu.Modals
+@inherits Menu.Modals.BaseModal
+
+@attribute [StyleSheet]
+
+<root class="binds-modal">
+	<div class="inner-modal">
+        <div class="action-list">
+
+            @foreach ( var group in Actions.Except( MenuUtility.Input.GetCommonInputs() ).GroupBy( x => x.GroupName ) )
+            {
+                <div class="subtitle">@group.Key</div>
+
+                <div class="group">
+                    @foreach( var action in group )
+                    {
+                        <div class="row">
+                            <div class="name">@action.Name</div>
+                        
+                            <KeyBind class="bind" @Game=@IGameInstance.Current Action=@action />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="footer">
+            <div class="glass button" @onclick=@(() => Save())>Save</div>
+        </div>
+    </div>
+</root>
+
+@code
+{
+    IEnumerable<InputAction> Actions { get; set; } = Input.GetActions();
+
+    public void Save()
+    {
+        foreach ( var kb in Descendants.OfType<KeyBind>() )
+        {
+            kb.Apply();
+        }
+
+        CloseModal( true );
+    }
+}

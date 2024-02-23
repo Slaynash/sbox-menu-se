@@ -1,0 +1,71 @@
+﻿@using Sandbox.UI;
+@using Sandbox.Internal;
+@using Sandbox;
+@namespace Menu.Settings
+@inherits Panel
+@page "/settings/developer"
+
+<root class="page-inner">
+
+    <column class="with-gaps">
+
+        <div class="glass with-padding is-heading">
+            <cell class="text-heading">Console</cell>
+        </div>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Console Overlay
+            </cell>
+            <ButtonGroup class="glass with-grow" ButtonClass="glass with-grow with-click" Options=@ConsoleOverlayOptions Value:bind=@ShowConsoleOverlay></ButtonGroup>
+        </row>
+
+	</column>
+
+     <div class="with-grow"></div>
+
+     <SettingsFooter></SettingsFooter>
+
+</root>
+
+
+@code
+{
+
+    List<Option> ConsoleOverlayOptions = new List<Option>()
+    {
+        new Option("Off", false),
+        new Option("On", true),
+    };
+
+    bool ShowConsoleOverlay;
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (!firstTime)
+            return;
+
+        ReadSettings();
+    }
+
+    [PanelEvent("restore-defaults")]
+    public void RestoreDefaults()
+    {
+        ConsoleSystem.SetValue("consoleoverlay", false);
+    }
+
+    [PanelEvent("cancel-changes")]
+    public void ReadSettings()
+    {
+        bool.TryParse(ConsoleSystem.GetValue("consoleoverlay"), out bool ShowConsoleOverlay);
+    }
+
+    [PanelEvent("apply-settings")]
+    public void ApplySettings()
+    {
+        ConsoleSystem.SetValue("consoleoverlay", ShowConsoleOverlay);
+    }
+
+}

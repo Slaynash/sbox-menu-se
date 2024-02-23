@@ -1,0 +1,124 @@
+
+$field-bg: mix( $primary, #222, 80% );
+$field-fg: white;
+
+.field-group
+{
+	margin-bottom: 30px;
+}
+
+.field {
+	flex-direction: row;
+	padding: 5px;
+	font-family: Poppins;
+
+	> .label {
+		color: rgba( white, 0.8 );
+		font-weight: 600;
+		font-size: 13px;
+		margin-bottom: 5px;
+		align-items: center;
+		height: 100%;
+		width: 40%;
+	}
+
+	> .control {
+		flex-direction: column;
+	}
+}
+
+
+.field .control .textentry,
+.field .control .button,
+.field .control .popupbutton.button.dropdown
+{
+	background-color: rgba( $field-bg, 0.1 );
+	font-size: 13px;
+	font-weight: normal;
+	
+	color: $field-fg;
+	border-radius: 5px;
+	min-height: 20px;
+	border: 1px solid rgba( lighten( $field-bg, 70% ), 0.2 );
+
+	&:hover
+	{
+		border-color: lighten( $field-bg, 110% );
+		background-color: lighten( $field-bg, 10% );
+	}
+
+	&:focus
+	{
+		border-color: mix( $primary, #fff, 20% );
+		background-color: mix( $field-bg, $primary, 30% );
+		color: white;
+	}
+}
+
+.field > .button
+{
+	margin: 5px 0;
+	background-color: rgba( white, 0.02 );
+	font-size: 14px;
+	padding: 8px 12px;
+	color: #fff;
+	border-radius: 5px;
+	min-height: 20px;
+}
+
+.field-header
+{
+	color: white;
+	font-size: 17px;
+	align-items: center;
+
+	> .iconpanel
+	{
+		margin-right: 10px;
+		opacity: 0.2;
+	}
+
+	> .label
+	{
+		font-weight: normal;
+	}
+
+	padding: 10px;
+	background-color: rgba( $field-bg, 0.1 );
+	border-radius: 10px 10px 0 0;
+	border: 1px solid $field-bg;
+	border-bottom: 0px;
+}
+
+.field-group
+{
+	padding: 10px;
+	background-color: rgba( $field-bg, 0.02 );
+	border-radius: 0 0 10px 10px;
+	border: 1px solid $field-bg;
+	border-top: 0;
+}
+
+
+
+.field .button.is-save
+{
+	background-color: $primary;
+
+	&.disabled
+	{
+		background-color: desaturate( $primary, 80% );
+		opacity: 0.02;
+	}
+
+	&.working
+	{
+		background-color: desaturate( $primary, 20% );
+		opacity: 0.1;
+
+		> .button-label
+		{
+			content: 'Saving..';
+		}
+	}
+}

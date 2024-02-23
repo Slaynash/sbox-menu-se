@@ -1,0 +1,23 @@
+@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@namespace Menu
+
+<root class="flex-row grow" style="flex-shrink: 0">
+    <div style="flex-shrink: 0; flex-direction: column; max-width: 100%;">
+         <PackageList ShowFilters="@true" Query=@Query OnFilterChanged="@OnFilterChanged" OnSelected="@OnSelect" Take=@(100)></PackageList>
+    </div>
+</root>
+
+@code
+{
+    public string Query { get; set; } = "type:map sort:trending";
+    public Action<Package> OnPackageSelected { get; set; }
+    public Action<string> OnFilterChanged { get; set; }
+
+    public void OnSelect( Package package )
+    {
+        OnPackageSelected?.Invoke( package );
+    }
+}

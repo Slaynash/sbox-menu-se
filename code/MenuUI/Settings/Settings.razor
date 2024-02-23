@@ -1,0 +1,63 @@
+@using Sandbox;
+@using Sandbox.UI;
+@page "/settings"
+@namespace Menu.Settings
+@inherits NavHostPanel
+
+<root class="page">
+
+	<column class="sidebar with-gaps">
+
+        <cell class="glass is-heading">
+            <div class="text-heading">Settings</div>
+        </cell>
+
+		<a class="glass with-click with-padding" href="/settings/video">
+            <cell><i>tv</i></cell>
+            <cell class="text-title">Video</cell>
+        </a>
+
+		<a class="glass with-click with-padding" href="/settings/input">
+            <cell><i>mouse</i></cell>
+            <cell class="text-title">Input</cell>
+        </a>
+
+		<a class="glass with-click with-padding" href="/settings/keybinds">
+            <cell><i>keyboard</i></cell>
+            <cell class="text-title">Key Binds</cell>
+        </a>
+
+		<a class="glass with-click with-padding" icon="" href="/settings/audio">
+            <cell><i>music_note</i></cell>
+            <cell class="text-title">Sound</cell>
+        </a>
+
+		<a class="glass with-click with-padding" href="/settings/game">
+            <cell><i>language</i></cell>
+            <cell class="text-title">Game</cell>
+        </a>
+
+		<a class="glass with-click with-padding" href="/settings/storage">
+            <cell><i>sd_card</i></cell>
+            <cell class="text-title">Cache & Storage</cell>
+        </a>
+
+        <a class="glass with-click with-padding" href="/settings/developer">
+            <cell><i>build</i></cell>
+            <cell class="text-title">Developer</cell>
+        </a>
+
+	</column>
+	
+    <div class="grow navigator-canvas" slot="navigator-canvas"></div>
+
+</root>
+
+
+@code
+{
+    public Settings()
+    {
+        DefaultUrl = "/settings/video";
+    }
+}

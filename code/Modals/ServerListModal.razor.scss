@@ -1,0 +1,97 @@
+ServerListModal
+{
+	background-color: red;
+	font-family: Poppins;
+
+	.inner-modal
+	{
+		max-width: 35%;
+		max-height: 50%;
+		pointer-events: all;
+		overflow-y: scroll;
+
+		.friends-list
+		{
+			flex-direction: column;
+			overflow: scroll;
+
+			> .subtitle
+			{
+				margin-bottom: 8px;
+				margin-top: 8px;
+				height: 16px;
+				flex-shrink: 0;
+				font-family: Poppins;
+				font-weight: bold;
+				font-size: 16px;
+			}
+		}
+	}
+
+	.notice
+	{
+		background-color: #1114;
+		padding: 15px;
+		border-radius: 10px;
+		font-size: 20px;
+		color: #fffa;
+		justify-content: center;
+
+	}
+
+	.row
+	{
+		border-radius: 5px;
+		padding: 0 8px;
+		cursor: pointer;
+		font-size: 13px;
+		transition: all 0.2s ease;
+
+		> div
+		{
+			padding: 8px;
+		}
+
+		&:intro
+		{
+			opacity: 0.0;
+		}
+
+		> .map, > .game
+		{
+			width: 200px;
+			justify-content: flex-end;
+		}
+
+		> .members
+		{
+			flex-grow: 0;
+			align-items: center;
+			justify-content: flex-end;
+			width: 50px;
+
+
+			.sep
+			{
+				opacity: 0.2;
+			}
+
+			.maxmembers
+			{
+				font-size: 11px;
+				opacity: 0.3;
+			}
+		}
+
+		> .title
+		{
+			flex-grow: 2;
+			font-weight: bold;
+		}
+
+		&:hover
+		{
+			background-color: #1117;
+		}
+	}
+}

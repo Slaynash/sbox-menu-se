@@ -1,0 +1,22 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@inherits Panel
+@attribute [StyleSheet]
+
+<root>
+    <div class="loading-panel">       
+        <div class="status">@LoadingScreen.Title</div>
+        <div class="cancel-button" onclick=@MenuUtility.CancelLoading>Cancel</div>
+    </div>
+</root>
+
+@code{
+
+
+    protected override int BuildHash() => System.HashCode.Combine( LoadingScreen.IsVisible, LoadingScreen.Title );
+
+    public override void Tick()
+    {
+        SetClass("visible", LoadingScreen.IsVisible);
+    }
+}

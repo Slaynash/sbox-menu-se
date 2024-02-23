@@ -1,0 +1,39 @@
+@using Sandbox.UI;
+@using Sandbox;
+@using System;
+@using Menu;
+@using Menu.Social;
+@inherits RootPanel
+@attribute [StyleSheet( "/styles/mainmenu.scss" )]
+
+<root class="mainmenu">
+
+    <NavHostPanel @ref="Navigator" DefaultUrl="/home" class="navigator">
+        <ChildContent>
+            <NavigationMenu></NavigationMenu>
+            <div id="MenuContent" slot="navigator-canvas"></div>
+        </ChildContent>
+    </NavHostPanel>
+
+	<SocialBar></SocialBar>
+	<FriendList></FriendList>
+
+    <div class="image-viewer @( showImage ? "active" : "" )" style="background-image: url( @viewImage ); transform-origin: @cursorPos.x% @cursorPos.y%;" @onclick=@( () => showImage = false )></div>
+
+</root>
+
+
+@code
+{
+    bool showImage;
+    string viewImage;
+
+    Vector2 cursorPos;
+
+    public void ShowPopup( string imageUrl )
+    {
+        cursorPos = (Mouse.Position / Screen.Size) * 100.0f;
+        viewImage = imageUrl;
+        showImage = true;
+    }
+}

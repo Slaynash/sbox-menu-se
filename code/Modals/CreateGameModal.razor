@@ -1,0 +1,133 @@
+﻿@namespace Menu.Modals
+@inherits Menu.Modals.BaseModal
+@using Sandbox;
+@using Sandbox.Modals;
+@using Menu;
+@using System;
+@attribute [StyleSheet]
+
+@if ( Package is null )
+{
+    <root class="create-game-modal">
+    </root>
+
+    return;
+}
+
+<root class="create-game-modal">
+
+    <div class="inner-modal" style="flex-direction: row; min-height: 500px;">
+
+        <div style="flex-direction: column; min-width: 300px; gap: 32px;">
+
+            <div class="header">
+
+                <div class="icon" style="margin-right: 20px;">
+                    <img src="@Package.Org.Thumb" style="width: 64px; height: 64px; border-radius: 8px;" />
+                </div>
+                <div style="flex-direction: column;">
+                    <div style="font-size: 22px; font-weight: bold;">@Package.Title</div>
+                    <div><span style="opacity: 0.2; margin-right: 5px;">from</span><span>@Package.Org.Title</span></div>
+                </div>
+            </div>
+
+            <div style="opacity: 0.3;">
+                @Package.Summary
+            </div>
+
+        </div>
+
+        <div style="flex-direction: column; gap: 32px;">
+
+            <div style="flex-grow: 1;">
+
+                @if (showMapSelect)
+                {
+                    <MapSelectButton MapIdent=@map OnClicked="@OnMapClicked"></MapSelectButton>
+                }
+
+            </div>
+
+            <div class="actions" style="justify-content: space-between;">
+
+                <button class="button is-cancel" @onclick=@( () => CloseModal( false ) )>
+                    <i>cancel</i>
+                    <column>
+                        Cancel
+                    </column>
+                </button>
+
+                <button class="button" disabled="@(!CanStartGame)" @onclick=@CreateGame>
+                    <i>done</i>
+                    <column>
+                        Play Game
+                    </column>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+                
+</root>
+
+@code
+{
+
+    string packageIdent;
+    Package Package;
+
+    bool showMapSelect = true;
+
+    string map;
+    string mapSearchFilter = "type:map sort:trending";
+    bool CanStartGame => map is not null;
+
+
+
+    public CreateGameModal(string packageIdent)
+    {
+        this.packageIdent = packageIdent;
+
+        LaunchArguments.Map = null;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Package = await Package.Fetch(packageIdent, false);
+
+        // load previous settings
+    }
+
+    void CreateGame()
+    {
+        CloseModal(true);
+
+        // save settings
+
+        MenuUtility.OpenGameWithMap(Package.FullIdent, map);
+    }
+
+    void OnMapClicked()
+    {
+        // target:{Package.FullIdent}
+
+        Game.Overlay.ShowPackageSelector( mapSearchFilter, OnMapSelected, OnFilterChanged );
+    }
+
+    void OnMapSelected( Package package )
+    {
+        map = package.FullIdent;
+    }
+
+    void OnFilterChanged(string filter)
+    {
+        mapSearchFilter = filter;
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(map);
+    }
+}

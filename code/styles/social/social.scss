@@ -1,0 +1,180 @@
+
+@import "chat";
+@import "deck";
+
+SocialBar
+{
+    background-color: #0e0f14;
+    z-index: 1; // content can be under us, but would be padded e.g the avatar background menu
+    flex-direction: row;
+    align-items: flex-end;
+    padding: 16px 64px;
+    // padding: 16px 48px;
+    justify-content: space-between;
+    flex-grow: 0;
+    flex-shrink: 0;
+    pointer-events: all;
+
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    // dummy right matches left, easy centering of middle
+    .left, .right
+    {
+        flex-grow: 1;
+        height: 48px;
+    }
+}
+
+FriendList
+{
+    background-color: #2b303c;
+    background-image: linear-gradient( #2b303c, #1d2028 );
+    box-shadow: 5px 5px 30px rgba( black, 0.8 );
+    border-radius: 10px;
+    position: absolute;
+    width: 400px;
+    height: 540px;
+    flex-direction: column;
+    right: 50px;
+    bottom: 100px;
+    padding: 10px;
+    font-family: Poppins;
+    color: white;
+    transition: opacity 0.2s ease-in-out;
+    opacity: 0;
+    pointer-events: all;
+
+    &.visible
+    {
+        opacity: 1;
+    }
+
+
+    .title
+    {
+        flex-shrink: 0;
+        text-transform: uppercase;
+        padding: 0px 0px 8px 4px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #eee;
+        flex-shrink: 0;
+    }
+
+    .friends
+    {
+        flex-grow: 1;
+        flex-direction: column;
+        gap: 10px;
+        overflow: scroll;
+    }
+
+    .subtitle
+    {
+        flex-shrink: 0;
+        text-transform: uppercase;
+        padding: 0px 0px 0px 4px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #eee;
+        flex-shrink: 0;
+    }
+}
+
+FriendEntry
+{
+    flex-shrink: 0;
+    max-height: 48px;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    padding: 2px;
+
+    &:hover
+    {
+        background-color: rgba( 255, 255, 255, 0.02 );
+
+        &:not( .active )
+        {
+            sound-in: ui.button.over;
+        }
+    }
+
+    &.away, &.offline
+    {
+        opacity: 0.5;
+    }
+
+    .avatar
+    {
+        width: 40px;
+        height: 40px;
+        background-size: cover;
+        border-radius: 100%;
+        margin-right: 8px;
+    }
+
+    .info
+    {
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .name
+    {
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .status
+    {
+        font-size: 11px;
+        font-weight: 400;
+    }
+
+    &.ingame .status
+    {
+        color: #8cf360;
+    }
+
+    &.online .status
+    {
+        color: #6bc1ff;
+    }
+
+    &.offline .status
+    {
+        color: gray;
+    }
+
+    .actions
+    {
+        flex-grow: 0;
+        gap: 8px;
+    }
+
+    .button-simple
+    {
+        align-items: center;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 8px 8px;
+        color: #B0D7EF;
+        transition: all 0.1s ease-out;
+        border-bottom: 1px solid rgba( $primary, 0 );
+        gap: 8px;
+
+        &:hover
+        {
+            border-bottom: 2px solid $primary;
+
+            &:not( .active )
+            {
+                sound-in: ui.button.over;
+            }
+        }
+    }
+}

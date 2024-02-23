@@ -1,0 +1,73 @@
+@using System;
+@using Sandbox.UI;
+@using Sandbox;
+@using Menu;
+@using Sandbox.Menu;
+
+<root id="NavigationMenu">
+
+    <div class="left">
+
+        @if ( MenuUtility.GamePackage is not null )
+        {
+            <div tooltip="Current Game" class="nav-button is-special-option" icon="electrical_services">
+                <i>ondemand_video</i>
+                <span class="title">@MenuUtility.GamePackage.Title</span>
+                <span class="action" tooltip="Leave Game" onclick:PreventDefault onclick=@(( PanelEvent e ) =>
+                    {
+                        Game.Close();
+                        e.StopPropagation();
+
+                    })><i>close</i></span>
+            </div>
+        }
+        else
+        {
+            <div class="logo">
+                <div class="main">
+                    <span class="highlight">s&</span>box
+                </div>
+                <div class="subtitle">
+                    developer preview
+                </div>
+                
+            </div>
+        }
+    </div>
+
+	<div class="center">
+        <a class="nav-button" href="/home"><i>follow_the_signs</i>discover</a>
+        <a class="nav-button" href="/games/all"><i>sports_handball</i>#menu.games</a>
+        <a class="nav-button" href="/maps/all"><i>place</i>maps</a>
+        <a href="/avatar" class="nav-button"><i>settings_accessibility</i>#menu.avatar</a>
+	</div>
+
+
+    <div class="right">
+
+		<a tooltip="#menu.streaming" class="nav-button nav-icon-only" @onclick=@( (e) => StreamerMode.ActiveStreamPopup( e.Target ) )>
+			<i>wifi</i>
+		</a>
+
+        <a tooltip="#menu.settings" href="/settings" class="nav-button nav-icon-only">
+            <i>settings</i>
+        </a>
+
+        <a tooltip="#menu.quit" class="nav-button nav-icon-only" @onclick=@( () => ConsoleSystem.Run( "quit" ) )>
+            <i>power_settings_new</i>
+        </a>
+
+    </div>
+
+
+
+</root>
+
+@code{
+
+	protected override int BuildHash()
+	{
+        return HashCode.Combine(Game.InGame, MenuUtility.GamePackage);
+	}
+
+}

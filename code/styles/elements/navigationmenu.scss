@@ -1,0 +1,246 @@
+$open-delay: 2.5s;
+$icon-size: 60px;
+$height: $navbar-height;
+
+#NavigationMenu
+{
+    height: $height;
+    flex-direction: row;
+    background-color: #0e0f14;
+    z-index: 10;
+    align-items: center;
+    padding: 0px 30px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    font-family: Poppins;
+    pointer-events: all;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 1000;
+    transition: all 0.5s 0.1s ease-out;
+
+    &:intro
+    {
+        top: -100px;
+    }
+
+    > div
+    {
+        flex-direction: row;
+        margin: 0px 20px;
+        height: 100%;
+
+        &.left
+        {
+            width: 400px;
+        }
+
+        &.right
+        {
+            justify-content: flex-end;
+            width: 400px;
+        }
+
+        &.center
+        {
+            flex-grow: 1;
+            justify-content: center;
+        }
+    }
+
+    .logo
+    {
+        flex-direction: column;
+
+        .main
+        {
+            font-size: 33px;
+            color: white;
+            font-family: Poppins;
+            font-weight: 700;
+            height: 100%;
+            align-items: center;
+            padding-bottom: 10px;
+
+            .highlight
+            {
+                color: $primary;
+            }
+        }
+
+        .subtitle
+        {
+            color: #fff8;
+            position: absolute;
+            bottom: 5px;
+            width: 200px;
+            font-size: 15px;
+        }
+    }
+
+    .nav-button
+    {
+        white-space: nowrap;
+        overflow: hidden;
+        position: relative;
+        height: 100%;
+        background-color: transparent;
+        font-size: 24px;
+        transition: all 0.1s ease-out;
+        font-weight: bold;
+        padding: 10px 20px;
+        padding-top: 15px;
+        color: white;
+        cursor: pointer;
+        gap: 10px;
+        opacity: 0.3;
+        align-items: center;
+        text-transform: lowercase;
+        transition: all 0.2s ease-out;
+
+        i
+        {
+            font-size: 25px;
+            opacity: 0.2;
+        }
+
+        &.active
+        {
+            color: $primary-alt;
+            opacity: 1;
+            border-bottom: 5px solid $primary;
+
+            .iconpanel
+            {
+                color: $primary;
+                opacity: 1;
+                text-shadow: 0px 0px 10px black;
+            }
+        }
+
+        &.is-special-option
+        {
+            color: rgba( $primary-alt, 0.8 );
+            background-color: rgba( $primary, 0.1 );
+            border: 2px solid rgba( $primary, 0.4 );
+            margin: 10px;
+            height: auto;
+            border-radius: 10px;
+            padding: 0;
+            transition: all 0.3s ease-out;
+            gap: 0;
+
+            i
+            {
+                color: $primary;
+                opacity: 0.7;
+                padding: 5px;
+                padding-left: 15px;
+            }
+
+            > .title
+            {
+                padding: 0px 10px;
+            }
+
+            &.active
+            {
+                border: 2px solid $primary;
+                background-color: rgba( $primary, 0.3 );
+                color: $primary-alt;
+
+                i
+                {
+                    color: white;
+                    opacity: 1;
+                }
+            }
+
+            > .action
+            {
+                border-left: 2px solid rgba( $primary, 0.4 );
+                height: 100%;
+                align-items: center;
+                padding: 10px;
+
+
+                > i
+                {
+                    font-size: 25px;
+                    margin: 0;
+                    padding: 0;
+                    color: rgba( white, 0.8 );
+                }
+
+                &:hover
+                {
+                    background-color: $primary;
+
+                    > i
+                    {
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        .iconpanel
+        {
+            font-size: 30px;
+            margin-right: 10px;
+            text-align: center;
+            align-items: center;
+            opacity: 0.2;
+        }
+
+        .count-badge
+        {
+            position: absolute;
+            right: 10px;
+            top: 30px;
+            background-color: $primary;
+            padding: 1px 10px;
+            min-width: 20px;
+            border-radius: 10px;
+            color: $primary-fg;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        &:hover:not( .active )
+        {
+            sound-in: ui.button.over;
+            opacity: 0.8;
+        }
+
+        &:active:not( .active )
+        {
+            sound-in: ui.button.press;
+        }
+    }
+
+
+    #LobbyButton:not( .active )
+    {
+        animation-name: pulse-navmenu;
+        animation-duration: 0.2s;
+        animation-timing-function: ease;
+        animation-direction: alternate;
+        transform-origin: 50% 50%;
+    }
+}
+
+@keyframes pulse-navmenu
+{
+    0%
+    {
+        transform: translatey( 3 );
+    }
+
+    100%
+    {
+        transform: translatey( 0 );
+    }
+}

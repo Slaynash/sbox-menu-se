@@ -1,0 +1,104 @@
+
+#SettingsPage
+{
+	&:not( .is-dirty )
+	{
+		.apply-button
+		{
+			opacity: 0.1;
+			pointer-events: none;
+		}
+	}
+}
+
+.settings .settings-page
+{
+	flex-grow: 1;
+	margin-bottom: 100px;
+
+	row
+	{
+		flex-direction: row;
+	}
+
+	column
+	{
+		flex-grow: 1;
+		margin-right: 10px;
+		flex-direction: column;
+		width: 50%;
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+
+
+		
+	}
+}
+
+.heading
+{
+	font-size: 14px;
+	font-family: Poppins;
+	text-transform: uppercase;
+	color: #c6d4ee;
+	margin: 20px 0 10px 0;
+	letter-spacing: 2px;
+	flex-shrink: 0;
+}
+
+Settings .row, controllerpanel
+{
+	background-color: rgba( black 0.35 );
+	margin: 3px 0;
+	border-radius: 3px;
+	padding: 5px;
+	transition: all 0.15s ease-in;
+	flex-shrink: 0;
+
+	&.button:hover:not(.active)
+	{
+		background-color: rgba( $primary .25 );
+	}
+
+	&.active
+	{
+		background-color: rgba( $primary 1 );
+		color: white;
+		transform: scale(1.05);
+
+		Label
+		{
+			color: white;
+		}
+	}
+
+	&.disabled
+	{
+		opacity: 0.2;
+		pointer-events: none;
+		transform: scale( 0.95 );
+	}
+
+	.left
+	{
+		width: 60%;
+		font-size: 16px;
+		font-family: Poppins;
+		font-weight: 500;
+		color: #93a4c3;
+		letter-spacing: 1px;
+		margin: 10px 0;
+		padding-left: 20px;
+		align-items: center;
+	}
+
+	.right
+	{
+		flex-grow: 1;
+		flex-direction: column;
+		justify-content: center;
+	}
+}

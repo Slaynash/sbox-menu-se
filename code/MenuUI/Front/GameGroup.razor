@@ -1,0 +1,62 @@
+@using System;
+@using Sandbox.UI;
+@using Sandbox;
+@using Menu;
+@inherits Panel;
+
+<root class="" style="flex-direction: column; flex-shrink: 0; max-width: 100%; justify-content: space-around; mask: linear-gradient( to right, white, black ) right center / 400px 100%">
+
+    <div class="header" style="margin: 16px 0; padding-left: 220px;">
+        <div class="title" style="font-size: 22px; opacity: 0.2; font-weight: bold; font-family: poppins;">@Group.Title</div>
+    </div>
+
+    <div style="gap: 16px; overflow-x: scroll; padding: 0px 220px; pointer-events: none;">
+        @foreach (var package in Group.Packages)
+        {
+            <PackageCard Package="@package" OnMenu=@(() => OpenMenu( package ) ) OnLaunch=@(() => Select( package ) ) style="pointer-events: all;"></PackageCard>
+        }
+    </div>
+
+</root>
+
+@code{
+
+    public Package.ListResult.Grouping Group { get; set; }
+
+    void Select( Package package )
+    {
+        MenuUtility.OpenGame( package.FullIdent );
+    }
+
+    void OpenMenu(Package package)
+    {
+        //Log.Info(string.Join($"/", package.Tags));
+
+        var menu = MenuPanel.Open( this );
+
+        menu.AddOption( "play_arrow", "Launch Game", () => MenuUtility.OpenGame( package.FullIdent ) );
+
+        if (package.Tags.Contains("maplaunch"))
+        {
+            menu.AddOption( "folder", "Open With Map..", () =>
+            {
+                Game.Overlay.ShowPackageSelector($"type:map sort:trending target:{package.FullIdent}", (p) => MenuUtility.OpenGameWithMap(package.FullIdent, p.FullIdent) );
+            });
+        }
+
+        if (package.Tags.Contains("multiplayer"))
+        {
+            menu.AddSpacer();
+            menu.AddOption("list", "View servers", () =>
+            {
+                Game.Overlay.ShowServerList(new Sandbox.Modals.ServerListConfig(package.FullIdent));
+            });
+        }
+
+        menu.AddSpacer();
+        menu.AddOption("info", $"View Game Details", () => Game.Overlay.ShowPackageModal(package.FullIdent));
+        menu.AddOption("corporate_fare", $"View Creator", () => Game.Overlay.ShowOrganizationModal(package.Org));
+
+        // Add Vote buttons?
+    }
+}

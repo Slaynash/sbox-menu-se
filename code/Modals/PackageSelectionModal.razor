@@ -1,0 +1,26 @@
+﻿@namespace Menu.Modals
+@inherits Menu.Modals.BaseModal
+@using Sandbox;
+@using Menu;
+@using System;
+@attribute [StyleSheet]
+
+<root class="package-selection-modal">
+
+    <PackageSelector Query=@PackageQuery OnPackageSelected="@OnSelect" OnFilterChanged="@OnFilterChanged"></PackageSelector>
+                
+</root>
+
+@code
+{
+    public string PackageQuery { get; set; }
+
+    public Action<Package> OnPackageSelected { get; set; }
+    public Action<string> OnFilterChanged { get; set; }
+
+    void OnSelect( Package package )
+    {
+        CloseModal( true );
+        OnPackageSelected?.Invoke( package );
+    }
+}

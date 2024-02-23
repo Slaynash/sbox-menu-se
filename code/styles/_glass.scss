@@ -1,0 +1,313 @@
+$padding-head: 100px !default;
+$padding-edge: 70px;
+
+$form-border: 3px solid #313c55;
+$form-border-active: 3px solid $primary;
+
+$gap-size: 2px;
+
+
+.glass
+{
+    background-color: rgba( #bdd4ff, 0.01 );
+    color: #B0D7EF;
+    flex-shrink: 0;
+    min-height: 43px;
+    font-size: 14px;
+
+    &.with-grow
+    {
+        flex-grow: 1;
+    }
+
+    &.with-shrink
+    {
+        flex-shrink: 1;
+    }
+
+    &.is-heading
+    {
+        background-color: rgba( #bdd4ff, 0.006 );
+        flex-direction: row;
+        align-items: center;
+    }
+
+    &.is-label
+    {
+        width: 200px;
+    }
+
+    &.with-nowrap
+    {
+        white-space: nowrap;
+
+        cell
+        {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    &.with-click
+    {
+        border-left: 1px solid rgba( $primary, 0 );
+        cursor: pointer;
+        transition: all 0.1s ease-out;
+
+        > *
+        {
+            pointer-events: none;
+        }
+
+        &:hover
+        {
+            border-left: 1px solid $primary;
+            background-color: rgba( #bdd4ff, 0.02 );
+            transition: all 0.1s ease-out;
+
+            &:not( .active )
+            {
+                sound-in: ui.button.over;
+            }
+        }
+
+        &:active
+        {
+            transition: all 0.0s ease;
+            sound-in: ui.button.press;
+            left: 2px;
+            top: 2px;
+        }
+    }
+
+    &.active
+    {
+        background-color: rgba( $primary, 0.6 );
+        color: white;
+        transition: all 0.0s ease-out;
+
+        &:hover, &:active
+        {
+            background-color: rgba( $primary, 0.8 );
+        }
+    }
+
+    &.with-hover
+    {
+        border-left: 1px solid rgba( $primary, 0 );
+        transition: all 0.1s ease-out;
+
+        &:hover
+        {
+            background-color: rgba( #bdd4ff, 0.02 );
+            border-left: 1px solid $primary;
+        }
+    }
+    //
+    // A title - basically bolder text (example, server name in a server list)
+    //
+    .text-title
+    {
+        font-size: 16px;
+        font-weight: bold;
+        color: #b6bfd3;
+    }
+    //
+    // A large title - for page titles etc
+    //
+    .text-title-large
+    {
+        font-size: 36px;
+        font-weight: bold;
+        color: #c4cfe8;
+    }
+    //
+    // A subtitle - for page subtitles
+    //
+    .text-subtitle
+    {
+        font-size: 28px;
+        font-weight: bold;
+        color: #c4cfe8;
+    }
+
+    //
+    // A heading - uppercase, kind of faded
+    //
+    .text-heading
+    {
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: rgba( #c0cde9, 0.4 );
+        letter-spacing: 3px;
+    }
+
+    .row-icon, .row-icon-large
+    {
+        width: 32px;
+        height: 32px;
+        background-position: center;
+        background-size: cover;
+        flex-shrink: 0;
+        border-radius: 100px;
+    }
+
+    &.with-icon
+    {
+        aspect-ratio: 1;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        padding: 0;
+    }
+
+    &.with-background-image
+    {
+        background-position: center;
+        background-size: cover;
+    }
+}
+
+row, .glass-row
+{
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: stretch;
+
+    &.with-gaps
+    {
+        gap: $gap-size;
+    }
+
+    > cell
+    {
+        align-items: center;
+        flex-direction: row;
+    }
+}
+
+
+column, .glass-column
+{
+    flex-direction: column;
+
+    &.with-gaps
+    {
+        gap: $gap-size;
+    }
+
+    &.with-scrolling
+    {
+        overflow: scroll;
+
+        > *
+        {
+            flex-shrink: 0;
+        }
+    }
+}
+
+wrap, .glass-wrap
+{
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    &.with-gaps
+    {
+        gap: $gap-size;
+    }
+
+    &.with-scrolling
+    {
+        overflow: scroll;
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+}
+
+cell
+{
+    padding: 4px 8px;
+
+    &.with-scrolling
+    {
+        overflow: scroll;
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+}
+
+.glass, row, column
+{
+    &.with-padding
+    {
+        padding: 8px;
+    }
+
+    &.with-padding-large
+    {
+        padding: 16px;
+    }
+
+    &.with-padding-huge
+    {
+        padding: 32px;
+    }
+}
+
+
+.with-grow
+{
+    flex-grow: 1;
+}
+
+.with-shrink
+{
+    flex-shrink: 1;
+}
+
+.with-no-shrink
+{
+    flex-shrink: 0;
+}
+
+.with-highlight
+{
+    border: 1px solid $primary;
+    color: #81A9E3;
+
+    &.with-click
+    {
+        border: 1px solid $primary;
+    }
+
+    .text-title
+    {
+        color: #D9EDFF;
+    }
+}
+
+
+.with-larger
+{
+    cell i
+    {
+        font-size: 33px;
+    }
+
+    .text-title
+    {
+        font-size: 22px;
+    }
+}
+
+.with-centered
+{
+    justify-content: center;
+    align-items: center;
+}
+
+.with-break-all {
+    word-break: break-all;
+}

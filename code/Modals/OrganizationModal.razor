@@ -1,0 +1,23 @@
+@namespace Menu.Modals
+@inherits Menu.Modals.BaseModal
+@using Sandbox;
+@using Menu;
+@using System;
+@attribute [StyleSheet]
+
+<root class="organization-modal">
+
+    <WebPanel class="browser" Url=@Url></WebPanel>
+                
+</root>
+
+@code
+{
+    public Package.Organization Org { get; set; }
+    public string Url;
+
+    protected override void OnParametersSet()
+    {
+        Url = $"https://asset.party/{Org.Ident}?viewmode=game";
+    }
+}

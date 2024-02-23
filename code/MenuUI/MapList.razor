@@ -1,0 +1,74 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@page "/maps/all"
+@inherits Panel
+
+<style>
+    .package-list 
+    {
+        padding: 50px 0px;
+    }
+</style>
+
+<root class="page-container page">
+    @if ( !Global.IsApiConnected )
+    {
+        <div style="flex-grow: 1; justify-content: center; align-items: center; flex-direction: column; gap: 16px;">
+            <div class="glass is-heading with-padding">You're running in offline mode and can't see any games. Restart your game and try again.</div>
+            <div class="glass is-heading with-padding">In the future we'll refresh this for you.</div>
+        </div>
+        return;
+    }
+
+    <PackageList ShowFilters="@true" Query="type:map sort:trending" OnMenu=@OpenMenu OnSelected=@OnPackageSelected Take=@(100)></PackageList>
+</root>
+
+@code{
+    string GameIdent => "facepunch.walker";
+
+    async void OnPackageSelected(Package package)
+    {
+        LaunchArguments.Map = null;
+        var lobbies = await Networking.QueryLobbies(GameIdent, package.FullIdent);
+        foreach( var lobby in lobbies) // TODO - order by most attractive
+        {
+            if ( lobby.IsFull ) continue;
+
+            if ( await Sandbox.Network.GameNetworkSystem.TryConnectSteamId(lobby.LobbyId) )
+                return;
+        }
+
+        CreateGame( package );
+    }
+
+    void CreateGame( Package package )
+    {
+        LaunchArguments.Map = package.FullIdent;
+        MenuUtility.OpenGame(GameIdent, false);
+    }
+
+    void ViewGameList(Package package)
+    {
+        Game.Overlay.ShowServerList( new Sandbox.Modals.ServerListConfig( GameIdent, package.FullIdent ) );
+    }
+
+    void OpenMenu(Package package)
+    {
+        var menu = MenuPanel.Open( this );
+
+        menu.AddOption("play_arrow", "Join game", () => OnPackageSelected(package));
+        menu.AddOption("playlist_add", "Create own game", () => CreateGame(package));
+
+        menu.AddSpacer();
+
+        menu.AddOption("list", "View servers", () => ViewGameList(package));
+
+     //   menu.AddOption( "folder", "Launch With Map..", OnLaunchWithMap );
+
+        menu.AddSpacer();
+        menu.AddOption("info", $"View Map Details", () => Game.Overlay.ShowPackageModal(package.FullIdent));
+        menu.AddOption("corporate_fare", $"View Creator", () => Game.Overlay.ShowOrganizationModal(package.Org));
+
+        // Add Vote buttons?
+    }
+}

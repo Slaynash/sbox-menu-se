@@ -1,0 +1,59 @@
+
+.page.page-home > .page-inner
+{
+	flex-direction: row;
+}
+
+.page-home .about-player
+{
+	width: 650px;
+
+	.avatar
+	{
+		flex-grow: 1;
+		left: 0px;
+		position: absolute;
+		top: 0px;
+		bottom: 0;
+		right: 0px;
+		opacity: 1;
+		color: white;
+	}
+}
+
+Home .favourites
+{
+	flex-direction: column;
+	justify-content: flex-start;
+	flex-wrap: nowrap;
+	overflow: scroll;
+}
+
+PlayerWidget
+{
+	PlayerWidgetScene
+	{
+		left: 0px;
+		width: 70%;
+		height: 100%;
+		position: absolute;
+	}
+}
+
+.widget
+{
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.background-image
+{
+	background-size: 101% 101%;
+	background-position: center;
+	transition: all 0.1s ease;
+
+	&.with-zoom
+	{
+		background-size: 105% 105%;
+	}
+}

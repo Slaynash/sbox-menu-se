@@ -1,0 +1,106 @@
+@using System;
+@using Sandbox.UI;
+@using Sandbox;
+@using Menu;
+
+@inherits Panel
+
+<style>
+    .blog {
+        padding: 32px;
+        padding-bottom: 50px;
+        justify-content: flex-end;
+        text-shadow: 1px 1px 20px #000a;
+        background-tint: #ddd;
+    }
+
+    .list
+    {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        flex-direction: row;
+        gap: 6px;
+        padding: 8px;
+
+        .entry
+        {
+            width: 20px;
+            height: 10px;
+            background-color: rgba( #3472e6, 0.5 );
+            box-shadow: 2px 2px 5px rgba( black, 0.5 );
+            border-radius: 0px;
+            cursor: pointer;
+            pointer-events: all;
+            z-index: 999;
+
+            &:hover
+            {
+                background-color: rgba( #bdd4ff, 0.1 );
+            }
+
+            &.active {
+                border-bottom: 1px solid #3472e6;
+                background-color: rgba( #bdd4ff, 0.05 );
+            }
+        }
+    }
+</style>
+
+<root class="widget glass-column with-gaps">
+    <row>
+        <cell class="glass grow is-heading">
+            <div class="text-heading">#newswidget.title</div>
+        </cell>
+    </row>
+
+    @if (CurrentBlog == null)
+    {
+        <column class="glass with-grow with-click with-background-image blog" style="background-image: url( '/ui/mainmenu/game_default.png' );" @onclick=@OnClicked>
+            <div class="text-title">Couldn't find a blog...</div>
+            <div class="subtitle">You might not have an active internet connection.</div>
+        </column>
+    }
+    else
+    {
+        <column class="glass with-grow with-click with-background-image blog" style="background-image: url( '@CurrentBlog.Header' );" @onclick=@OnClicked>
+            <div class="text-title">@CurrentBlog.Title</div>
+            <div class="subtitle">@CurrentBlog.Summary</div>
+        </column>
+
+        <div class="list">
+            @foreach ( var blog in Blogs )
+            {
+                <div class="entry @(blog.Equals( CurrentBlog ) ? "active" : "")" Tooltip="@blog.Title" onclick=@(() => SelectedBlog = blog)>
+                </div>
+            }
+        </div>
+    }
+</root>
+
+@code
+{
+    Blog[] Blogs;
+    Blog SelectedBlog { get; set; } = null;
+    Blog CurrentBlog => SelectedBlog ?? Blogs?.FirstOrDefault();
+
+    protected override void OnAfterTreeRender( bool firstTime )
+    {
+        if ( firstTime ) 
+            Fetch();
+    }
+
+    async void Fetch()
+    {
+        var blogs = await GetBlogsAsync();
+
+        Blogs = blogs?.Take( 4 ).ToArray();
+        StateHasChanged();
+    }
+
+    void OnClicked()
+    {
+        // If no news was found, link will still take you to the main news page
+        MenuUtility.OpenFolder( $"https://sbox.facepunch.com/news/{(CurrentBlog.Url ?? "")}" );
+    }
+}

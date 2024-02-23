@@ -1,0 +1,162 @@
+﻿@using Sandbox.UI;
+@using Sandbox.Internal;
+@using Sandbox;
+@namespace Menu.Settings
+@inherits Panel
+@page "/settings/input"
+
+<root class="page-inner">
+
+    <column class="with-gaps">
+
+        <div class="glass with-padding is-heading">
+            <cell class="text-heading">Mouse</cell>
+        </div>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Mouse Sensitivity
+            </cell>
+            <SliderControl class="glass with-grow" Min=@(0) Max=@(20) Step=@(0.1f) Value:bind=@MouseSensitivity ShowTextEntry="@true"></SliderControl>
+        </row>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Invert Mouse Pitch
+            </cell>
+            <ButtonGroup class="glass with-grow" ButtonClass="glass with-grow with-click" Options=@InvertMousePitchOptions Value:bind=@InvertMousePitch></ButtonGroup>
+        </row>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Invert Mouse Yaw
+            </cell>
+            <ButtonGroup class="glass with-grow" ButtonClass="glass with-grow with-click" Options=@InvertMouseYawOptions Value:bind=@InvertMouseYaw></ButtonGroup>
+        </row>
+        
+        <div class="glass with-padding is-heading">
+            <cell class="text-heading">Controllers</cell>
+        </div>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Look Yaw Speed
+            </cell>
+            <SliderControl class="glass with-grow" Min=@(0) Max=@(360) Value:bind=@ControllerLookSpeedYaw ShowTextEntry="@true"></SliderControl>
+        </row>
+
+        <row class="with-gaps">
+            <cell class="glass with-padding is-label">
+                Look Pitch Speed
+            </cell>
+            <SliderControl class="glass with-grow" Min=@(0) Max=@(360) Value:bind=@ControllerLookSpeedPitch ShowTextEntry="@true"></SliderControl>
+        </row>
+
+        @foreach (var controller in ControllerSettings.ConnectedControllers)
+        {
+            <row class="glass with-click" onclick="@controller.OpenBindingPanel">
+                <cell>
+                    <img class="row-icon" src="@($"/ui/input/controllers/controller_icon_{ControllerIconFile(controller)}.png")" />
+                </cell>
+                <cell>
+                    <label text="Configure @controller.Type" />
+                </cell>
+            </row>
+        }
+
+	</column>
+
+     <div class="with-grow"></div>
+
+     <SettingsFooter></SettingsFooter>
+
+</root>
+
+
+@code
+{
+	public float MouseSensitivity { get; set; }
+
+	public float ControllerLookSpeedYaw { get; set; }
+	public float ControllerLookSpeedPitch { get; set; }
+
+	public bool InvertMousePitch { get; set; }
+	public bool InvertMouseYaw { get; set; }
+
+	List<Option> InvertMousePitchOptions = new List<Option>()
+	{
+		new Option("Off", false),
+		new Option("On", true),
+	};
+
+	List<Option> InvertMouseYawOptions = new List<Option>()
+	{
+		new Option("Off", false),
+		new Option("On", true),
+	};
+
+	protected override void OnAfterTreeRender(bool firstTime)
+	{
+		base.OnAfterTreeRender(firstTime);
+
+		if (!firstTime)
+			return;
+
+		ReadSettings();
+	}
+
+	[PanelEvent("restore-defaults")]
+	public void RestoreDefaults()
+	{
+		ConsoleSystem.SetValue("sensitivity", 5);
+		ConsoleSystem.SetValue("controller_look_speed_yaw", 270);
+		ConsoleSystem.SetValue("controller_look_speed_pitch", 160);
+		ConsoleSystem.SetValue("mouse_pitch_inverted", false);
+		ConsoleSystem.SetValue("mouse_yaw_inverted", false);
+	}
+
+    [PanelEvent("cancel-changes")]
+    public void ReadSettings()
+    {
+        MouseSensitivity = ConsoleSystem.GetValue("sensitivity").ToFloat();
+        ControllerLookSpeedYaw = ConsoleSystem.GetValue("controller_look_speed_yaw").ToFloat();
+        ControllerLookSpeedPitch = ConsoleSystem.GetValue("controller_look_speed_pitch").ToFloat();
+		InvertMousePitch = ConsoleSystem.GetValue("mouse_pitch_inverted").ToBool();
+		InvertMouseYaw = ConsoleSystem.GetValue("mouse_yaw_inverted").ToBool();
+    }
+
+    [PanelEvent("apply-settings")]
+    public void ApplySettings()
+    {
+        ConsoleSystem.SetValue( "sensitivity", MouseSensitivity );
+        ConsoleSystem.SetValue( "controller_look_speed_yaw", ControllerLookSpeedYaw );
+		ConsoleSystem.SetValue( "controller_look_speed_pitch", ControllerLookSpeedPitch );
+		ConsoleSystem.SetValue( "mouse_pitch_inverted", InvertMousePitch );
+		ConsoleSystem.SetValue( "mouse_yaw_inverted", InvertMouseYaw );
+    }
+
+    string ControllerIconFile( ControllerSettings controller )
+    {
+        switch (controller.Type)
+        {
+            case "SteamController":
+            case "SteamDeckController":
+                return "steamcontroller";
+            case "Xbox360Controller":
+                return "xbox_360";
+            case "XBoxOneController":
+                return "xbox_one";
+            case "PS3Controller":
+                return "ps3";
+            case "PS4Controller":
+                return "ps4";
+            case "PS5Controller":
+                return "ps5";
+            case "SwitchProController":
+                return "switch_pro";
+        }
+
+        return "xbox_360";
+    }
+
+}
