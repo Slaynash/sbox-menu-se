@@ -52,8 +52,10 @@
         border-radius:15px;
         border:0;
         transition: border 1s ease-out 400ms;
+        justify-content:space-between;
     }
     .lobby-bulle:hover{border:solid 2px #2f72a8;}
+    .bulle-container{justify-content:space-between;min-width:100%;}
     .lobby-unpublish{
         text-align:center;
         position:absolute;
@@ -63,7 +65,8 @@
         width:300px;
     } 
     .lobby-icon{width:30px;height:30px;border-radius:5px;position:absolute;bottom:20px;left:-25px;}
-    .lobby-info{margin:25px;margin-left:1%;margin-right:5%;}
+    .lobby-info{/*margin:25px;margin-left:1%;margin-right:5px;*/}
+    .space{margin-left:5px;}
     .info-img{
     width:300px;
     height:300px;
@@ -103,14 +106,12 @@
                 
                 <button class='lobby-bulle' style='background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>
                     <span><img src="https://i.pinimg.com/originals/ae/24/87/ae24874dd301843548c034a3d2973658.png" class="lobby-icon"></span>
-                    <p>Name: </p>
-                    <span class="lobby-info">@lobbyInfo.Name</span>
-                    <p>Game: </p>
-                    <span class="lobby-info">@lobbyInfo.Game</span>
-                    <p>Map: </p>
-                    <span class="lobby-info">@lobbyInfo.Map</span>
-                    <p>Members: </p>
-                    <span class="lobby-info">@lobbyInfo.Members / @lobbyInfo.MaxMembers</span>
+                    <div class="bulle-container">
+                        <div class="lobby-info">Name: <span class="space">@lobbyInfo.Name</span></div>
+                        <div class="lobby-info">Game: <span class="space">@lobbyInfo.Game</span></div>
+                        <div class="lobby-info">Map: <span class="space">@lobbyInfo.Map</span></div>
+                        <div class="lobby-info">Members: <span class="space">@lobbyInfo.Members / @lobbyInfo.MaxMembers</span></div>   
+                    </div>
                 </button>
             }
 
