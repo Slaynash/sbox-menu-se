@@ -43,10 +43,11 @@
         margin-right:10%;
     }
     .lobby-bulle{
+        position:relative;
         width:95%;
         min-height:80px;
         margin:5px;
-        margin-top:15px;
+        margin-top:25px;
         display:flex;
         flex-direction:row;
         border-radius:15px;
@@ -55,6 +56,7 @@
         justify-content:space-between;
     }
     .lobby-bulle:hover{border:solid 2px #2f72a8;}
+    .lobby-bulle:hover .lobby-tags{border:solid;border-image:linear-gradient(to right, #2f72a8, #ffffff00) 2px;}
     .bulle-container{justify-content:space-between;min-width:100%;}
     .lobby-unpublish{
         text-align:center;
@@ -65,7 +67,7 @@
         width:300px;
     } 
     .lobby-icon{width:30px;height:30px;border-radius:5px;position:absolute;bottom:20px;left:-25px;}
-    .lobby-tags{width:auto;height:auto;border-radius:5px;position:absolute;bottom:40px;background-color:gray;text-align:center;padding:2px;}
+    .lobby-tags{width:auto;height:auto;border-radius:5px;position:absolute;bottom:45px;background-color:gray;text-align:center;padding:2px;}
     .lobby-info{/*margin:25px;margin-left:1%;margin-right:5px;*/flex-grow:1;flex-basis:1;}
     .space{margin-left:5px;}
     .info-img{
@@ -109,12 +111,12 @@
                     <span><img src="https://i.pinimg.com/originals/ae/24/87/ae24874dd301843548c034a3d2973658.png" class="lobby-icon"></span>
                     <div class="bulle-container">  
                         <span class="lobby-tags" style='left:2vh;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>NAME</span>
-                        <div class="lobby-info"><span class="space">@lobbyInfo.Name</span></div>
                         <span class="lobby-tags" style='left:30vh;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>GAME</span>
-                        <div class="lobby-info"><span class="space">@lobbyInfo.Game</span></div>
                         <span class="lobby-tags" style='left:55vh;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>MAP</span>
-                        <div class="lobby-info"><span class="space">@lobbyInfo.Map</span></div>
                         <span class="lobby-tags" style='left:80vh;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>ONLINE</span>
+                        <div class="lobby-info"><span class="space">@lobbyInfo.Name</span></div>
+                        <div class="lobby-info"><span class="space">@lobbyInfo.Game</span></div>
+                        <div class="lobby-info"><span class="space">@lobbyInfo.Map</span></div>
                         <div class="lobby-info"><span class="space">@lobbyInfo.Members / @lobbyInfo.MaxMembers</span></div>   
                     </div>
                 </button>
