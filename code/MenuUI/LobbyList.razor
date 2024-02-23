@@ -2,7 +2,6 @@
 @using Sandbox.UI;
 @using Sandbox.Network;
 @page "/lobbies/all"
-@inherits Panel
 
 <style>
     .package-list 
@@ -103,118 +102,42 @@
     else
     {
         <div class="lobby-container">
-            @foreach ( LobbyInformation lobbyInfo in lobbies )
+            @foreach ( ResolvedLobby lobbyInfo in lobbies )
             {
                 @if ( lobbyInfo.Game.StartsWith("local.") )
                     continue;
                 
-                <button class='lobby-bulle' style='background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>
-                    <span><img src="https://i.pinimg.com/originals/ae/24/87/ae24874dd301843548c034a3d2973658.png" class="lobby-icon"></span>
+                <button class='lobby-bulle' style='background-color:@( lobbyInfo.Dev ? "#303020" : "#202020");' onClick=@(() => ShowLobbyInfo(lobbyInfo))>
+                    <span><img src="@lobbyInfo.Image" class="lobby-icon"></span>
                     <div class="bulle-container">  
-                        <span class="lobby-tags" style='left:2vh;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>NAME</span>
-                        <span class="lobby-tags" style='left:30vh;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>GAME</span>
-                        <span class="lobby-tags" style='left:55vh;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>MAP</span>
-                        <span class="lobby-tags" style='left:80vh;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");'>ONLINE</span>
-                        <div class="lobby-info"><span class="space">@lobbyInfo.Name</span></div>
-                        <div class="lobby-info"><span class="space">@lobbyInfo.Game</span></div>
-                        <div class="lobby-info"><span class="space">@lobbyInfo.Map</span></div>
-                        <div class="lobby-info"><span class="space">@lobbyInfo.Members / @lobbyInfo.MaxMembers</span></div>   
+                        <span class="lobby-tags" style='left:2vh;background-color:@( lobbyInfo.Dev ? "#303020" : "#202020");'>NAME</span>
+                        <span class="lobby-tags" style='left:30vh;background-color:@( lobbyInfo.Dev ? "#303020" : "#202020");'>GAME</span>
+                        <span class="lobby-tags" style='left:55vh;background-color:@( lobbyInfo.Dev ? "#303020" : "#202020");'>MAP</span>
+                        <span class="lobby-tags" style='left:80vh;background-color:@( lobbyInfo.Dev ? "#303020" : "#202020");'>ONLINE</span>
+                        <div class="lobby-info">@lobbyInfo.Name</div>
+                        <div class="lobby-info">@lobbyInfo.Game</div>
+                        <div class="lobby-info">@lobbyInfo.Map</div>
+                        <div class="lobby-info">@lobbyInfo.Members / @lobbyInfo.MaxMembers</div>   
                     </div>
                 </button>
             }
+
         </div>
 
-        <div class="lobby-info-container">
-            <img class="info-img" src="https://i.pinimg.com/originals/ae/24/87/ae24874dd301843548c034a3d2973658.png" alt="">
-            <h4 style="font-size:25px;margin:1%;">Username</h4>
-            <h3 style="font-size:30px;margin:1%;">game.thegame</h3>
-            <h5 style="font-size:20px;margin:1%;">map.map</h5>
-            <h4 style="font-size:25px;margin:1%;">0/64</h4>
-            <button class="info-join">Join</button>
-        </div>
+        @if ( selectedLobby != null )
+        {
+            <div class="lobby-info-container">
+                <img class="info-img" src="https://i.pinimg.com/originals/ae/24/87/ae24874dd301843548c034a3d2973658.png" alt="">
+                <h4 style="font-size:25px;margin:1%;">@selectedLobby.Name</h4>
+                <h3 style="font-size:30px;margin:1%;">@selectedLobby.Game</h3>
+                <h5 style="font-size:20px;margin:1%;">@selectedLobby.Map</h5>
+                <h4 style="font-size:25px;margin:1%;">@selectedLobby.Members / @selectedLobby.MaxMembers</h4>
+                <button class="info-join" onClick=@( () => JoinLobby(selectedLobby))>Join</button>
+            </div>
+        }
 
         <div class="lobby-unpublish">
             <span style="font-size:2vh;color:gray;">Not showing @( lobbies.Select(lobby => lobby.Game.StartsWith("local.")).Count() ) local games</span>
         </div>
     }
 </root>
-
-@code{
-    private float refreshDelta = 10.0f;
-
-    List<LobbyInformation> lobbies = new List<LobbyInformation>();
-    private float lastRefresh = 0;
-    private bool isRefreshing = false;
-
-    private async void LoadLobbies()
-    {
-        lobbies = await Networking.QueryLobbies();
-        Log.Info($"Found {lobbies.Count} lobbies.");
-
-        lastRefresh = Time.Now;
-        isRefreshing = false;
-
-        StateHasChanged();
-    }
-
-    public override void Tick() // Kinda an ugly way to do this ngl, maybe there is a better way?
-    {
-        base.Tick();
-
-        if (Time.Now > lastRefresh + refreshDelta && !isRefreshing)
-        {
-            isRefreshing = true;
-            LoadLobbies();
-        }
-    }
-
-    /*
-    string GameIdent => "facepunch.walker";
-
-    async void OnPackageSelected(Package package)
-    {
-        LaunchArguments.Map = null;
-        var lobbies = await Networking.QueryLobbies(GameIdent, package.FullIdent);
-        foreach( var lobby in lobbies) // TODO - order by most attractive
-        {
-            if ( lobby.IsFull ) continue;
-
-            if ( await Sandbox.Network.GameNetworkSystem.TryConnectSteamId(lobby.LobbyId) )
-                return;
-        }
-
-        CreateGame( package );
-    }
-
-    void CreateGame( Package package )
-    {
-        LaunchArguments.Map = package.FullIdent;
-        MenuUtility.OpenGame(GameIdent, false);
-    }
-
-    void ViewGameList(Package package)
-    {
-        Game.Overlay.ShowServerList( new Sandbox.Modals.ServerListConfig( GameIdent, package.FullIdent ) );
-    }
-
-    void OpenMenu(Package package)
-    {
-        var menu = MenuPanel.Open( this );
-
-        menu.AddOption("play_arrow", "Join game", () => OnPackageSelected(package));
-        menu.AddOption("playlist_add", "Create own game", () => CreateGame(package));
-
-        menu.AddSpacer();
-
-        menu.AddOption("list", "View servers", () => ViewGameList(package));
-
-     //   menu.AddOption( "folder", "Launch With Map..", OnLaunchWithMap );
-
-        menu.AddSpacer();
-        menu.AddOption("info", $"View Map Details", () => Game.Overlay.ShowPackageModal(package.FullIdent));
-        menu.AddOption("corporate_fare", $"View Creator", () => Game.Overlay.ShowOrganizationModal(package.Org));
-
-        // Add Vote buttons?
-    }
-    */
-}
