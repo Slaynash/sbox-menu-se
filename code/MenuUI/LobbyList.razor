@@ -1,0 +1,123 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using Sandbox.Network;
+@page "/lobbies/all"
+@inherits Panel
+
+<style>
+    .package-list 
+    {
+        padding: 50px 0px;
+    }
+</style>
+
+<root class="page-container page">
+    @if ( !Global.IsApiConnected )
+    {
+        <div style="flex-grow: 1; justify-content: center; align-items: center; flex-direction: column; gap: 16px;">
+            <div class="glass is-heading with-padding">You're running in offline mode and can't see any games. Restart your game and try again.</div>
+            <div class="glass is-heading with-padding">In the future we'll refresh this for you.</div>
+        </div>
+        return;
+    }
+    else
+    {
+        <div style="display:flex;flex-direction:column;width:100%;align-items:center;max-height:100%;overflow:scroll;">
+            
+            @foreach ( LobbyInformation lobbyInfo in lobbies )
+            {
+                @if ( lobbyInfo.Game.StartsWith("local.") )
+                    continue;
+                
+                <div style='width:400px;min-height:60px;background-color:@( lobbyInfo.Data["dev"] == "1" ? "#303020" : "#202020");margin:20px;display:flex;flex-direction:column;'>
+                    <span>@lobbyInfo.Name</span>
+                    <span>@lobbyInfo.Game</span>
+                </div>
+            }
+        </div>
+
+        <div style="position:absolute;bottom:80px;right:0px;height:30px;width:300px;">
+            <span style="font-size:2vh;color:gray;">Not showing @( lobbies.Select(lobby => lobby.Game.StartsWith("local.")).Count() ) local games</span>
+        </div>
+    }
+</root>
+
+@code{
+    private float refreshDelta = 10.0f;
+
+    List<LobbyInformation> lobbies = new List<LobbyInformation>();
+    private float lastRefresh = 0;
+    private bool isRefreshing = false;
+
+    private async void LoadLobbies()
+    {
+        lobbies = await Networking.QueryLobbies();
+        Log.Info($"Found {lobbies.Count} lobbies.");
+
+        lastRefresh = Time.Now;
+        isRefreshing = false;
+
+        StateHasChanged();
+    }
+
+    public override void Tick() // Kinda an ugly way to do this ngl, maybe there is a better way?
+    {
+        base.Tick();
+
+        if (Time.Now > lastRefresh + refreshDelta && !isRefreshing)
+        {
+            isRefreshing = true;
+            LoadLobbies();
+        }
+    }
+
+    /*
+    string GameIdent => "facepunch.walker";
+
+    async void OnPackageSelected(Package package)
+    {
+        LaunchArguments.Map = null;
+        var lobbies = await Networking.QueryLobbies(GameIdent, package.FullIdent);
+        foreach( var lobby in lobbies) // TODO - order by most attractive
+        {
+            if ( lobby.IsFull ) continue;
+
+            if ( await Sandbox.Network.GameNetworkSystem.TryConnectSteamId(lobby.LobbyId) )
+                return;
+        }
+
+        CreateGame( package );
+    }
+
+    void CreateGame( Package package )
+    {
+        LaunchArguments.Map = package.FullIdent;
+        MenuUtility.OpenGame(GameIdent, false);
+    }
+
+    void ViewGameList(Package package)
+    {
+        Game.Overlay.ShowServerList( new Sandbox.Modals.ServerListConfig( GameIdent, package.FullIdent ) );
+    }
+
+    void OpenMenu(Package package)
+    {
+        var menu = MenuPanel.Open( this );
+
+        menu.AddOption("play_arrow", "Join game", () => OnPackageSelected(package));
+        menu.AddOption("playlist_add", "Create own game", () => CreateGame(package));
+
+        menu.AddSpacer();
+
+        menu.AddOption("list", "View servers", () => ViewGameList(package));
+
+     //   menu.AddOption( "folder", "Launch With Map..", OnLaunchWithMap );
+
+        menu.AddSpacer();
+        menu.AddOption("info", $"View Map Details", () => Game.Overlay.ShowPackageModal(package.FullIdent));
+        menu.AddOption("corporate_fare", $"View Creator", () => Game.Overlay.ShowOrganizationModal(package.Org));
+
+        // Add Vote buttons?
+    }
+    */
+}
